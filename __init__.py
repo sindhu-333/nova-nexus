@@ -1,0 +1,1 @@
+"""Nova Nexus - Manufacturing Order Management System"""

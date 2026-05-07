@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nova Nexus — Manufacturing OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0b0d;
+    --surface: #111318;
+    --surface2: #181b22;
+    --border: #1f2330;
+    --border2: #2a2f3e;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --accent: #00d4ff;
+    --accent2: #7c3aed;
+    --green: #00e5a0;
+    --red: #ff4757;
+    --amber: #ffb800;
+    --sidebar-w: 220px;
+    --topbar-h: 52px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.4;
+  }
+
+  /* ===== AUTH SCREEN ===== */
+  #auth-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    background: var(--bg);
+  }
+
+  .auth-bg::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    top: -100px; left: -100px;
+    animation: drift 8s ease-in-out infinite alternate;
+  }
+  .auth-bg::after {
+    content: '';
+    position: absolute;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%);
+    bottom: -100px; right: -100px;
+    animation: drift 10s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes drift {
+    from { transform: translate(0,0) scale(1); }
+    to   { transform: translate(40px,30px) scale(1.1); }
+  }
+  .auth-bg { position:absolute; inset:0; overflow:hidden; }
+
+  .auth-card {
+    position: relative;
+    width: 420px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 48px 40px;
+    z-index: 1;
+    animation: slide-up 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+  }
+  @keyframes slide-up {
+    from { opacity:0; transform:translateY(30px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .auth-logo { display:flex; align-items:center; gap:12px; margin-bottom:36px; }
+  .logo-mark {
+    width:40px; height:40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius:10px;
+    display:grid; place-items:center;
+    font-family:'Syne',sans-serif; font-weight:800; font-size:18px; color:#fff; letter-spacing:-1px;
+  }
+  .logo-text { font-family:'Syne',sans-serif; font-weight:700; font-size:20px; letter-spacing:-0.5px; }
+  .logo-text span { color:var(--accent); }
+
+  .auth-title { font-family:'Syne',sans-serif; font-size:26px; font-weight:700; margin-bottom:8px; }
+  .auth-sub { color:var(--muted); font-size:14px; margin-bottom:32px; line-height:1.5; }
+
+  .field { margin-bottom:16px; }
+  .field label {
+    display:block;
+    font-family:'DM Mono',monospace; font-size:11px; font-weight:500;
+    color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:8px;
+  }
+  .field input {
+    width:100%; background:var(--surface2); border:1px solid var(--border2);
+    border-radius:10px; padding:12px 16px; color:var(--text);
+    font-family:'DM Sans',sans-serif; font-size:14px; outline:none;
+    transition:border-color 0.2s, box-shadow 0.2s;
+  }
+  .field input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,212,255,0.1); }
+  .field input::placeholder { color:var(--muted); }
+
+  .role-picker { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:24px; }
+  .role-option {
+    border:1px solid var(--border2); border-radius:10px; padding:12px;
+    cursor:pointer; transition:all 0.2s; text-align:center;
+  }
+  .role-option:hover { border-color:var(--accent); }
+  .role-option.active { border-color:var(--accent); background:rgba(0,212,255,0.05); }
+  .role-option .role-icon { font-size:20px; margin-bottom:4px; }
+  .role-option .role-name { font-size:12px; font-weight:500; color:var(--text); }
+  .role-option .role-desc { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  .btn-primary {
+    width:100%; background:linear-gradient(135deg,var(--accent),#0090c0);
+    color:#000; font-family:'Syne',sans-serif; font-weight:700; font-size:14px;
+    letter-spacing:0.02em; border:none; border-radius:10px; padding:14px;
+    cursor:pointer; transition:all 0.2s; margin-top:8px;
+  }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 0 20px rgba(0,212,255,0.3); }
+
+  .auth-footer { text-align:center; margin-top:20px; font-size:12px; color:var(--muted); }
+  .auth-footer a { color:var(--accent); cursor:pointer; text-decoration:none; }
+
+  /* ===== MAIN APP SHELL ===== */
+  #app {
+    display: none;
+    height: 100vh;
+    flex-direction: column;
+  }
+  #app.visible { display: flex; }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    height: var(--topbar-h);
+    min-height: var(--topbar-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 16px 0 0;
+    gap: 14px;
+    flex-shrink: 0;
+    z-index: 10;
+  }
+
+  .topbar-logo {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 16px;
+    border-right: 1px solid var(--border);
+    height: 100%;
+  }
+  .topbar-logo .logo-mark { width:28px; height:28px; font-size:12px; border-radius:7px; }
+  .topbar-logo .logo-name { font-family:'Syne',sans-serif; font-weight:700; font-size:14px; letter-spacing:-0.3px; }
+  .topbar-logo .logo-name span { color:var(--accent); }
+
+  .status-pill {
+    display:flex; align-items:center; gap:6px;
+    font-family:'DM Mono',monospace; font-size:11px; color:var(--green);
+  }
+  .status-dot {
+    width:6px; height:6px; border-radius:50%; background:var(--green);
+    animation:pulse-dot 2s ease-in-out infinite;
+  }
+  @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .topbar-right { margin-left:auto; display:flex; align-items:center; gap:12px; }
+
+  .user-badge {
+    display:flex; align-items:center; gap:9px;
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:9px; padding:5px 11px;
+  }
+  .user-avatar {
+    width:26px; height:26px; border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    display:grid; place-items:center; font-weight:700; font-size:11px; color:#fff;
+  }
+  .user-info { display:flex; flex-direction:column; }
+  .user-name { font-size:12px; font-weight:500; line-height:1.2; }
+  .user-role { font-size:10px; color:var(--muted); font-family:'DM Mono',monospace; }
+
+  .btn-logout {
+    background:none; border:1px solid var(--border); border-radius:7px;
+    color:var(--muted); font-size:11px; padding:5px 11px;
+    cursor:pointer; font-family:'DM Sans',sans-serif; transition:all 0.2s;
+  }
+  .btn-logout:hover { border-color:var(--red); color:var(--red); }
+
+  /* ── BODY ROW ── */
+  .app-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  .sidebar::-webkit-scrollbar { width:3px; }
+  .sidebar::-webkit-scrollbar-thumb { background:var(--border2); }
+
+  .sidebar-inner { padding: 12px 10px; display:flex; flex-direction:column; gap:2px; }
+
+  .sidebar-section {
+    font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.1em;
+    color:var(--muted); text-transform:uppercase;
+    padding:10px 10px 4px; margin-top:6px;
+  }
+  .sidebar-section:first-child { margin-top:0; }
+
+  .nav-item {
+    display:flex; align-items:center; gap:9px;
+    padding:8px 10px; border-radius:8px;
+    cursor:pointer; font-size:13px; color:var(--muted);
+    transition:all 0.15s; position:relative; white-space:nowrap;
+    user-select:none;
+  }
+  .nav-item:hover { background:var(--surface2); color:var(--text); }
+  .nav-item.active {
+    background:rgba(0,212,255,0.08); color:var(--accent);
+  }
+  .nav-item.active::before {
+    content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
+    width:3px; height:60%; background:var(--accent); border-radius:0 2px 2px 0;
+  }
+  .nav-icon { font-size:14px; width:18px; text-align:center; flex-shrink:0; }
+  .nav-label { flex:1; }
+  .nav-badge {
+    background:var(--accent2); color:#fff;
+    font-size:10px; font-family:'DM Mono',monospace;
+    padding:1px 5px; border-radius:20px; min-width:18px; text-align:center;
+  }
+
+  /* ── CHAT NAV ITEM special style ── */
+  .nav-item.chat-nav {
+    margin-top:6px;
+    background:rgba(0,212,255,0.06);
+    border:1px solid rgba(0,212,255,0.15);
+    color:var(--accent);
+  }
+  .nav-item.chat-nav:hover { background:rgba(0,212,255,0.12); }
+  .nav-item.chat-nav.active {
+    background:rgba(0,212,255,0.14);
+    border-color:rgba(0,212,255,0.35);
+  }
+
+  /* ── CONTENT AREA ── */
+  .content-area {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* Each "page" panel */
+  .page-panel {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    padding: 24px 24px;
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+    animation: page-in 0.2s ease forwards;
+  }
+  .page-panel.active { display: flex; }
+  @keyframes page-in {
+    from { opacity:0; transform:translateX(6px); }
+    to   { opacity:1; transform:translateX(0); }
+  }
+  .page-panel::-webkit-scrollbar { width:4px; }
+  .page-panel::-webkit-scrollbar-thumb { background:var(--border); border-radius:2px; }
+
+  /* ── PAGE HEADER ── */
+  .page-header { flex-shrink:0; }
+  .page-title { font-family:'Syne',sans-serif; font-size:20px; font-weight:700; margin-bottom:3px; }
+  .page-sub { color:var(--muted); font-size:13px; }
+
+  /* ── STATS GRID ── */
+  .stats-grid {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:10px; flex-shrink:0;
+  }
+  .stat-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:16px; position:relative; overflow:hidden;
+  }
+  .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+  .stat-card.blue::before { background:var(--accent); }
+  .stat-card.green::before { background:var(--green); }
+  .stat-card.purple::before { background:var(--accent2); }
+  .stat-card.amber::before { background:var(--amber); }
+
+  .stat-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:0.08em; color:var(--muted); text-transform:uppercase; margin-bottom:8px; }
+  .stat-value { font-family:'Syne',sans-serif; font-size:28px; font-weight:800; line-height:1; margin-bottom:4px; }
+  .stat-card.blue .stat-value { color:var(--accent); }
+  .stat-card.green .stat-value { color:var(--green); }
+  .stat-card.purple .stat-value { color:var(--accent2); }
+  .stat-card.amber .stat-value { color:var(--amber); }
+  .stat-change { font-size:11px; color:var(--muted); font-family:'DM Mono',monospace; }
+
+  /* ── ORDERS PANEL ── */
+  .orders-panel {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; overflow:hidden; flex-shrink:0;
+  }
+  .panel-header {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 18px; border-bottom:1px solid var(--border);
+  }
+  .panel-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; }
+  .panel-actions { display:flex; gap:6px; }
+
+  .filter-btn {
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:6px; color:var(--muted);
+    font-size:11px; font-family:'DM Mono',monospace;
+    padding:4px 9px; cursor:pointer; transition:all 0.15s;
+  }
+  .filter-btn:hover, .filter-btn.active { border-color:var(--accent); color:var(--accent); }
+
+  .orders-table { width:100%; border-collapse:collapse; }
+  .orders-table th {
+    padding:9px 18px; text-align:left;
+    font-family:'DM Mono',monospace; font-size:10px; font-weight:500;
+    letter-spacing:0.08em; color:var(--muted); text-transform:uppercase;
+    border-bottom:1px solid var(--border); background:var(--surface2);
+  }
+  .orders-table td {
+    padding:11px 18px; font-size:13px;
+    border-bottom:1px solid var(--border); transition:background 0.1s;
+  }
+  .orders-table tr:last-child td { border-bottom:none; }
+  .orders-table tr:hover td { background:rgba(255,255,255,0.015); }
+
+  .order-id { font-family:'DM Mono',monospace; font-size:12px; color:var(--accent); }
+
+  .status-chip {
+    display:inline-flex; align-items:center; gap:4px;
+    padding:3px 9px; border-radius:20px;
+    font-size:10px; font-family:'DM Mono',monospace; font-weight:500;
+  }
+  .status-chip::before { content:''; width:5px; height:5px; border-radius:50%; }
+
+  .status-pending { background:rgba(255,184,0,0.1); color:var(--amber); }
+  .status-pending::before { background:var(--amber); }
+  .status-accepted { background:rgba(0,229,160,0.1); color:var(--green); }
+  .status-accepted::before { background:var(--green); }
+  .status-rejected { background:rgba(255,71,87,0.1); color:var(--red); }
+  .status-rejected::before { background:var(--red); }
+  .status-in_progress { background:rgba(0,212,255,0.1); color:var(--accent); }
+  .status-in_progress::before { background:var(--accent); }
+  .status-completed { background:rgba(124,58,237,0.1); color:var(--accent2); }
+  .status-completed::before { background:var(--accent2); }
+
+  .due-date { font-family:'DM Mono',monospace; font-size:11px; color:var(--muted); }
+
+  .empty-state { padding:50px 20px; text-align:center; color:var(--muted); }
+  .empty-icon { font-size:32px; margin-bottom:10px; opacity:0.4; }
+  .empty-title { font-size:14px; color:var(--text); margin-bottom:4px; }
+  .empty-desc { font-size:13px; }
+
+  /* ── TIMELINE / QUALITY ── */
+  .timeline-item {
+    display:flex; gap:12px; padding:11px 0;
+    border-bottom:1px solid var(--border); font-size:13px; align-items:flex-start;
+  }
+  .timeline-item:last-child { border-bottom:none; }
+  .timeline-dot { width:7px; height:7px; border-radius:50%; background:var(--accent); margin-top:5px; flex-shrink:0; }
+  .timeline-dot.quality { background:var(--green); }
+  .timeline-dot.status { background:var(--amber); }
+  .timeline-order { font-family:'DM Mono',monospace; font-size:11px; color:var(--accent); margin-bottom:2px; }
+  .timeline-event { color:var(--text); }
+  .timeline-time { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-top:2px; }
+
+  .quality-item { padding:13px 0; border-bottom:1px solid var(--border); font-size:13px; }
+  .quality-item:last-child { border-bottom:none; }
+  .quality-header { display:flex; justify-content:space-between; margin-bottom:4px; }
+  .quality-order { font-family:'DM Mono',monospace; font-size:12px; color:var(--accent); }
+  .quality-result { font-size:11px; font-family:'DM Mono',monospace; }
+  .quality-result.pass { color:var(--green); }
+  .quality-result.fail { color:var(--red); }
+  .quality-detail { color:var(--muted); font-size:12px; }
+  .quality-time { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); margin-top:4px; }
+
+  /* ── ANALYTICS PLACEHOLDER ── */
+  .analytics-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .analytics-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:20px;
+    min-height:140px; display:flex; flex-direction:column; gap:10px;
+  }
+  .analytics-card-title { font-family:'Syne',sans-serif; font-size:13px; font-weight:700; }
+  .analytics-bar-wrap { flex:1; display:flex; align-items:flex-end; gap:6px; }
+  .analytics-bar {
+    flex:1; background:rgba(0,212,255,0.15); border-radius:4px 4px 0 0;
+    position:relative; transition:height 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
+  .analytics-bar::after {
+    content:attr(data-label);
+    position:absolute; bottom:-18px; left:50%; transform:translateX(-50%);
+    font-family:'DM Mono',monospace; font-size:9px; color:var(--muted); white-space:nowrap;
+  }
+  .analytics-bar-container { flex:1; height:100px; display:flex; align-items:flex-end; gap:6px; margin-bottom:20px; }
+
+  /* ── CHAT PANEL (replaces content area) ── */
+  #chat-page {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    background: var(--bg);
+    animation: page-in 0.2s ease forwards;
+  }
+  #chat-page.active { display: flex; }
+
+  .chat-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .chat-title-group { display:flex; flex-direction:column; }
+  .chat-title { font-family:'Syne',sans-serif; font-size:14px; font-weight:700; }
+  .chat-subtitle { font-size:11px; color:var(--muted); margin-top:1px; }
+
+  .ai-badge {
+    display:flex; align-items:center; gap:5px;
+    background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.2);
+    border-radius:20px; padding:4px 10px;
+    font-size:11px; font-family:'DM Mono',monospace; color:var(--accent);
+  }
+  .ai-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); animation:pulse-dot 1.5s ease-in-out infinite; }
+
+  .chat-messages {
+    flex:1; overflow-y:auto; padding:16px; display:flex;
+    flex-direction:column; gap:10px; min-height:0;
+    scrollbar-width:thin; scrollbar-color:var(--border2) transparent;
+  }
+  .chat-messages::-webkit-scrollbar { width:4px; }
+  .chat-messages::-webkit-scrollbar-thumb { background:var(--border2); border-radius:2px; }
+
+  .msg { max-width:85%; animation:msg-in 0.25s cubic-bezier(0.22,1,0.36,1) forwards; }
+  @keyframes msg-in { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+  .msg.user { align-self:flex-end; }
+  .msg.assistant { align-self:flex-start; }
+
+  .msg-bubble { padding:10px 13px; border-radius:13px; font-size:13px; line-height:1.5; }
+  .msg.user .msg-bubble {
+    background:linear-gradient(135deg,var(--accent),#0090c0);
+    color:#000; font-weight:500; border-radius:13px 13px 4px 13px;
+  }
+  .msg.assistant .msg-bubble {
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:13px 13px 13px 4px; color:var(--text);
+  }
+  .msg-time { font-size:10px; color:var(--muted); font-family:'DM Mono',monospace; margin-top:3px; padding:0 3px; }
+  .msg.user .msg-time { text-align:right; }
+
+  .response-card {
+    margin-top:6px; background:var(--surface); border:1px solid var(--border);
+    border-radius:9px; padding:10px; font-size:12px;
+  }
+  .rc-label { font-family:'DM Mono',monospace; font-size:10px; color:var(--muted); letter-spacing:0.06em; margin-bottom:7px; }
+  .rc-row { display:flex; justify-content:space-between; padding:3px 0; border-bottom:1px solid var(--border); font-size:12px; }
+  .rc-row:last-child { border-bottom:none; }
+  .rc-key { color:var(--muted); }
+  .rc-val { font-weight:500; font-family:'DM Mono',monospace; font-size:11px; }
+
+  .quick-cmds {
+    padding:10px 16px 7px; display:flex; flex-wrap:wrap; gap:5px;
+    border-top:1px solid var(--border); flex-shrink:0; background:var(--surface);
+  }
+  .qcmd {
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:20px; color:var(--muted); font-size:11px;
+    font-family:'DM Mono',monospace; padding:4px 9px;
+    cursor:pointer; transition:all 0.15s; white-space:nowrap;
+  }
+  .qcmd:hover { border-color:var(--accent); color:var(--accent); background:rgba(0,212,255,0.05); }
+
+  .chat-input-area { padding:10px 14px 14px; flex-shrink:0; background:var(--surface); border-top:1px solid var(--border); }
+  .chat-input-wrap {
+    display:flex; gap:8px; background:var(--surface2); border:1px solid var(--border2);
+    border-radius:11px; padding:9px 11px; transition:border-color 0.2s;
+  }
+  .chat-input-wrap:focus-within { border-color:var(--accent); box-shadow:0 0 0 2px rgba(0,212,255,0.08); }
+  .chat-input {
+    flex:1; background:none; border:none; outline:none; color:var(--text);
+    font-family:'DM Sans',sans-serif; font-size:13px; resize:none; max-height:72px; line-height:1.4;
+  }
+  .chat-input::placeholder { color:var(--muted); }
+  .send-btn {
+    width:30px; height:30px; background:var(--accent); border:none;
+    border-radius:7px; color:#000; cursor:pointer;
+    display:grid; place-items:center; flex-shrink:0; align-self:flex-end;
+    transition:all 0.2s; font-size:13px;
+  }
+  .send-btn:hover { background:#00b8d9; }
+  .send-btn:disabled { opacity:0.4; cursor:not-allowed; }
+
+  .thinking-bubble {
+    align-self:flex-start; background:var(--surface2); border:1px solid var(--border);
+    border-radius:13px; padding:11px 14px; display:flex; gap:4px; align-items:center;
+  }
+  .thinking-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); animation:bounce 1.2s ease-in-out infinite; }
+  .thinking-dot:nth-child(2){animation-delay:0.2s;}
+  .thinking-dot:nth-child(3){animation-delay:0.4s;}
+  @keyframes bounce { 0%,80%,100%{transform:translateY(0);opacity:0.4} 40%{transform:translateY(-5px);opacity:1} }
+
+  /* ── TOAST ── */
+  .toast-container { position:fixed; bottom:20px; left:calc(var(--sidebar-w) + 20px); z-index:9998; display:flex; flex-direction:column; gap:7px; }
+  .toast {
+    background:var(--surface); border:1px solid var(--border2); border-radius:10px;
+    padding:12px 16px; font-size:13px; display:flex; align-items:center; gap:9px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.4); animation:toast-in 0.3s cubic-bezier(0.22,1,0.36,1) forwards; min-width:240px;
+  }
+  @keyframes toast-in { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+  .toast.success { border-color:rgba(0,229,160,0.3); }
+  .toast.error   { border-color:rgba(255,71,87,0.3); }
+</style>
+</head>
+<body>
+
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-bg"></div>
+  <div class="auth-card">
+    <div class="auth-logo">
+      <div class="logo-mark">NN</div>
+      <div class="logo-text">Nova<span>Nexus</span></div>
+    </div>
+    <div class="auth-title">Welcome back</div>
+    <div class="auth-sub">Sign in to access your manufacturing workspace</div>
+    <div class="field">
+      <label>Email address</label>
+      <input type="email" id="auth-email" placeholder="operator@factory.com" value="operator@factory.com">
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input type="password" id="auth-password" placeholder="••••••••" value="password">
+    </div>
+    <div style="margin-bottom:20px;">
+      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;">Role</div>
+      <div class="role-picker" id="role-picker">
+        <div class="role-option active" data-role="operator">
+          <div class="role-icon">⚙️</div>
+          <div class="role-name">Operator</div>
+          <div class="role-desc">Create & manage orders</div>
+        </div>
+        <div class="role-option" data-role="supervisor">
+          <div class="role-icon">👁️</div>
+          <div class="role-name">Supervisor</div>
+          <div class="role-desc">Review & approve</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Access Workspace →</button>
+    <div class="auth-footer">Demo mode — <a onclick="doLogin()">click to enter directly</a></div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="logo-mark">NN</div>
+      <div class="logo-name">Nova<span>Nexus</span></div>
+    </div>
+    <div class="status-pill">
+      <div class="status-dot"></div>
+      <span>All Systems Operational</span>
+    </div>
+    <div class="topbar-right">
+      <div class="user-badge">
+        <div class="user-avatar" id="topbar-avatar">O</div>
+        <div class="user-info">
+          <div class="user-name" id="topbar-name">Operator</div>
+          <div class="user-role" id="topbar-role">Manufacturing</div>
+        </div>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+
+  <!-- BODY: sidebar + content -->
+  <div class="app-body">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-inner">
+
+        <div class="sidebar-section">Workspace</div>
+        <div class="nav-item active" data-page="dashboard" onclick="setPage('dashboard',this)">
+          <span class="nav-icon">⚡</span>
+          <span class="nav-label">Dashboard</span>
+        </div>
+        <div class="nav-item" data-page="all-orders" onclick="setPage('all-orders',this)">
+          <span class="nav-icon">📦</span>
+          <span class="nav-label">All Orders</span>
+          <span class="nav-badge" id="nav-badge">0</span>
+        </div>
+        <div class="nav-item" data-page="accepted" onclick="setPage('accepted',this)">
+          <span class="nav-icon">✅</span>
+          <span class="nav-label">Accepted</span>
+        </div>
+        <div class="nav-item" data-page="in-progress" onclick="setPage('in-progress',this)">
+          <span class="nav-icon">🔄</span>
+          <span class="nav-label">In Progress</span>
+        </div>
+
+        <div class="sidebar-section">Monitor</div>
+        <div class="nav-item" data-page="timeline" onclick="setPage('timeline',this)">
+          <span class="nav-icon">📊</span>
+          <span class="nav-label">Timeline</span>
+        </div>
+        <div class="nav-item" data-page="quality" onclick="setPage('quality',this)">
+          <span class="nav-icon">🔬</span>
+          <span class="nav-label">Quality Reports</span>
+        </div>
+        <div class="nav-item" data-page="analytics" onclick="setPage('analytics',this)">
+          <span class="nav-icon">📈</span>
+          <span class="nav-label">Analytics</span>
+        </div>
+
+        <div class="sidebar-section">AI</div>
+        <div class="nav-item chat-nav" data-page="chat" onclick="setPage('chat',this)" id="chat-nav-item">
+          <span class="nav-icon">🤖</span>
+          <span class="nav-label">Nova AI</span>
+          <span class="nav-badge" id="chat-badge" style="display:none;background:var(--red);">1</span>
+        </div>
+
+      </div>
+    </div><!-- /sidebar -->
+
+    <!-- CONTENT AREA -->
+    <div class="content-area">
+
+      <!-- PAGE: DASHBOARD -->
+      <div id="page-dashboard" class="page-panel active">
+        <div class="page-header">
+          <div class="page-title">Manufacturing Dashboard</div>
+          <div class="page-sub" id="dash-date">—</div>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-value" id="stat-total">0</div>
+            <div class="stat-change">All time</div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-label">Accepted</div>
+            <div class="stat-value" id="stat-accepted">0</div>
+            <div class="stat-change">Approved</div>
+          </div>
+          <div class="stat-card amber">
+            <div class="stat-label">Pending</div>
+            <div class="stat-value" id="stat-pending">0</div>
+            <div class="stat-change">Awaiting review</div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-label">Completed</div>
+            <div class="stat-value" id="stat-completed">0</div>
+            <div class="stat-change">Fulfilled</div>
+          </div>
+        </div>
+        <div class="orders-panel">
+          <div class="panel-header">
+            <div class="panel-title">Orders</div>
+            <div class="panel-actions">
+              <button class="filter-btn active" onclick="filterMain('all',this)">All</button>
+              <button class="filter-btn" onclick="filterMain('pending',this)">Pending</button>
+              <button class="filter-btn" onclick="filterMain('accepted',this)">Accepted</button>
+              <button class="filter-btn" onclick="filterMain('in_progress',this)">In Progress</button>
+            </div>
+          </div>
+          <div id="dash-orders-container"></div>
+        </div>
+      </div>
+
+      <!-- PAGE: ALL ORDERS -->
+      <div id="page-all-orders" class="page-panel">
+        <div class="page-header">
+          <div class="page-title">All Orders</div>
+          <div class="page-sub">Complete list of manufacturing orders</div>
+        </div>
+        <div class="orders-panel">
+          <div class="panel-header">
+            <div class="panel-title">Orders</div>
+            <div class="panel-actions">
+              <button class="filter-btn active" onclick="filterSecondary('all',this,'sec-all')">All</button>
+              <button class="filter-btn" onclick="filterSecondary('pending',this,'sec-all')">Pending</button>
+              <button class="filter-btn" onclick="filterSecondary('accepted',this,'sec-all')">Accepted</button>
+              <button class="filter-btn" onclick="filterSecondary('in_progress',this,'sec-all')">In Progress</button>
+              <button class="filter-btn" onclick="filterSecondary('completed',this,'sec-all')">Completed</button>
+            </div>
+          </div>
+          <div id="sec-all"></div>
+        </div>
+      </div>
+
+      <!-- PAGE: ACCEPTED -->
+      <div id="page-accepted" class="page-panel">
+        <div class="page-header">
+          <div class="page-title">Accepted Orders</div>
+          <div class="page-sub">Orders approved for manufacturing</div>
+        </div>
+        <div class="orders-panel">
+          <div class="panel-header"><div class="panel-title">Accepted</div></div>
+          <div id="sec-accepted"></div>
+        </div>
+      </div>
+
+      <!-- PAGE: IN PROGRESS -->
+      <div id="page-in-progress" class="page-panel">
+        <div class="page-header">
+          <div class="page-title">In Progress</div>
+          <div class="page-sub">Orders currently being manufactured</div>
+        </div>
+        <div class="orders-panel">
+          <div class="panel-header"><div class="panel-title">In Progress</div></div>
+          <div id="sec-progress"></div>
+        </div>
+      </div>
+
+      <!-- PAGE: TIMELINE -->
+      <div id="page-timeline" class="page-panel">
+        <div class="page-header">
+          <div class="page-title">Order Timeline</div>
+          <div class="page-sub">Activity log across all orders</div>
+        </div>
+        <div class="orders-panel">
+          <div class="panel-header"><div class="panel-title">Activity Feed</div></div>
+          <div id="sec-timeline" style="padding:14px 18px;"></div>
+        </div>
+      </div>
+
+      <!-- PAGE: QUALITY -->
+      <div id="page-quality" class="page-panel">
+        <div class="page-header">
+          <div class="page-title">Quality Reports</div>
+          <div class="page-sub">Inspection and quality check logs</div>
+        </div>
+        <div class="orders-panel">
+          <div class="panel-header"><div class="panel-title">Quality Log</div></div>
+          <div id="sec-quality" style="padding:14px 18px;"></div>
+        </div>
+      </div>
+
+      <!-- PAGE: ANALYTICS -->
+      <div id="page-analytics" class="page-panel">
+        <div class="page-header">
+          <div class="page-title">Analytics</div>
+          <div class="page-sub">Production overview and metrics</div>
+        </div>
+        <div class="analytics-grid">
+          <div class="analytics-card">
+            <div class="analytics-card-title">Orders by Status</div>
+            <div class="analytics-bar-container" id="analytics-status-bars"></div>
+          </div>
+          <div class="analytics-card">
+            <div class="analytics-card-title">Recent Activity</div>
+            <div id="analytics-activity" style="font-size:13px;color:var(--muted);margin-top:8px;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PAGE: CHAT (replaces content area) -->
+      <div id="chat-page">
+        <div class="chat-header">
+          <div class="chat-title-group">
+            <div class="chat-title">Nova AI Assistant</div>
+            <div class="chat-subtitle">Powered by Claude · Orders saved to your account</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="ai-badge"><div class="ai-dot"></div> Claude AI</div>
+          </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg assistant">
+            <div class="msg-bubble">
+              👋 Hello! I'm Nova, your manufacturing AI. You can:<br><br>
+              • <strong>Create orders</strong> — just describe what you need<br>
+              • <strong>Update status</strong> — "Mark order #1 as accepted"<br>
+              • <strong>Track orders</strong> — "Show all orders"<br>
+              • <strong>Quality reports</strong> — "Quality check passed for order #2"
+            </div>
+            <div class="msg-time">Just now</div>
+          </div>
+        </div>
+
+        <div class="quick-cmds">
+          <button class="qcmd" onclick="fillCmd('Show all orders')">📋 View orders</button>
+          <button class="qcmd" onclick="fillCmd('I need 100 steel brackets by 2026-06-15')">➕ New order</button>
+          <button class="qcmd" onclick="fillCmd('Mark order #1 as accepted')">✅ Accept</button>
+          <button class="qcmd" onclick="fillCmd('Mark order #1 as in_progress')">🔄 In Progress</button>
+          <button class="qcmd" onclick="fillCmd('Quality inspection passed for order #1')">🔬 Quality</button>
+          <button class="qcmd" onclick="clearChat()">🗑️ Clear</button>
+        </div>
+
+        <div class="chat-input-area">
+          <div class="chat-input-wrap">
+            <textarea
+              class="chat-input" id="chat-input"
+              placeholder="Message Nova AI..."
+              rows="1"
+              onkeydown="handleKey(event)"
+              oninput="autoResize(this)"
+            ></textarea>
+            <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
+          </div>
+        </div>
+      </div><!-- /chat-page -->
+
+    </div><!-- /content-area -->
+  </div><!-- /app-body -->
+</div><!-- /app -->
+
+<div class="toast-container" id="toast-container"></div>
+
+<script>
+// ===== STATE =====
+let state = {
+  user: null,
+  orders: [],
+  currentPage: 'dashboard',
+  previousPage: 'dashboard',
+  dashFilter: 'all',
+  isThinking: false,
+  chatHistory: []
+};
+
+// ===== LOCAL STORAGE =====
+function dbKey(e)  { return `nova_orders_${e}`; }
+function hKey(e)   { return `nova_chat_${e}`; }
+function saveOrders()  { if (state.user) try { localStorage.setItem(dbKey(state.user.email), JSON.stringify(state.orders)); } catch(e){} }
+function loadOrders(e) { try { const r = localStorage.getItem(dbKey(e)); return r ? JSON.parse(r) : []; } catch(e){ return []; } }
+function saveHistory() { if (state.user) try { localStorage.setItem(hKey(state.user.email), JSON.stringify(state.chatHistory.slice(-40))); } catch(e){} }
+function loadHistory(e){ try { const r = localStorage.getItem(hKey(e)); return r ? JSON.parse(r) : []; } catch(e){ return []; } }
+
+// ===== AUTH =====
+document.querySelectorAll('.role-option').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.role-option').forEach(r => r.classList.remove('active'));
+    el.classList.add('active');
+  });
+});
+
+function doLogin() {
+  const email = document.getElementById('auth-email').value || 'operator@factory.com';
+  const role  = document.querySelector('#role-picker .role-option.active')?.dataset.role || 'operator';
+  const name  = email.split('@')[0].replace(/\./g,' ').replace(/\b\w/g, l => l.toUpperCase());
+  state.user  = { email, role, name };
+  state.orders = loadOrders(email);
+  state.chatHistory = loadHistory(email);
+
+  document.getElementById('topbar-name').textContent = name;
+  document.getElementById('topbar-role').textContent = role.charAt(0).toUpperCase() + role.slice(1);
+  document.getElementById('topbar-avatar').textContent = name[0].toUpperCase();
+
+  document.getElementById('auth-screen').style.opacity = '0';
+  document.getElementById('auth-screen').style.transition = 'opacity 0.3s';
+  setTimeout(() => {
+    document.getElementById('auth-screen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    updateDashDate();
+    refreshAll();
+    const c = state.orders.length;
+    addSystemMsg(`Welcome back, ${name}! ${c > 0 ? `📦 ${c} order${c!==1?'s':''} loaded from history.` : 'No orders yet — start by asking Nova AI!'}`);
+  }, 300);
+}
+
+function doLogout() {
+  saveOrders(); saveHistory();
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('auth-screen').style.opacity = '1';
+  document.getElementById('app').classList.remove('visible');
+  state.user = null; state.orders = []; state.chatHistory = [];
+  // Reset chat UI
+  document.getElementById('chat-messages').innerHTML = `<div class="msg assistant"><div class="msg-bubble">👋 Hello! I'm Nova, your manufacturing AI. You can:<br><br>• <strong>Create orders</strong> — just describe what you need<br>• <strong>Update status</strong> — "Mark order #1 as accepted"<br>• <strong>Track orders</strong> — "Show all orders"<br>• <strong>Quality reports</strong> — "Quality check passed for order #2"</div><div class="msg-time">Just now</div></div>`;
+  // Return to dashboard page
+  state.currentPage = 'dashboard';
+  showPage('dashboard');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelector('[data-page="dashboard"]').classList.add('active');
+}
+
+// ===== DATE =====
+function updateDashDate() {
+  const d = new Date();
+  document.getElementById('dash-date').textContent = d.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+}
+
+// ===== NAVIGATION =====
+function setPage(page, el) {
+  // Store previous page (not chat)
+  if (state.currentPage !== 'chat') state.previousPage = state.currentPage;
+
+  state.currentPage = page;
+
+  // Update sidebar active state
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  el.classList.add('active');
+
+  // Clear chat badge if opening chat
+  if (page === 'chat') {
+    document.getElementById('chat-badge').style.display = 'none';
+  }
+
+  showPage(page);
+}
+
+function showPage(page) {
+  // Hide all page panels
+  document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+  // Hide chat
+  document.getElementById('chat-page').classList.remove('active');
+
+  if (page === 'chat') {
+    document.getElementById('chat-page').classList.add('active');
+    setTimeout(scrollChat, 80);
+  } else {
+    const target = document.getElementById('page-' + page);
+    if (target) {
+      target.classList.add('active');
+      renderPageContent(page);
+    }
+  }
+}
+
+function renderPageContent(page) {
+  if (page === 'dashboard')   { renderOrdersInto('dash-orders-container', state.dashFilter); updateStats(); }
+  if (page === 'all-orders')  renderOrdersInto('sec-all', 'all');
+  if (page === 'accepted')    renderOrdersInto('sec-accepted', 'accepted');
+  if (page === 'in-progress') renderOrdersInto('sec-progress', 'in_progress');
+  if (page === 'timeline')    renderTimeline();
+  if (page === 'quality')     renderQuality();
+  if (page === 'analytics')   renderAnalytics();
+}
+
+function filterMain(type, btn) {
+  state.dashFilter = type;
+  btn.closest('.panel-actions').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrdersInto('dash-orders-container', type);
+}
+
+function filterSecondary(type, btn, cid) {
+  btn.closest('.panel-actions').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrdersInto(cid, type);
+}
+
+// ===== RENDER HELPERS =====
+function renderOrdersInto(cid, filter) {
+  const container = document.getElementById(cid);
+  if (!container) return;
+  let orders = state.orders;
+  if (filter !== 'all') orders = orders.filter(o => (o.status||'').toLowerCase() === filter);
+  if (!orders.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No ${filter==='all'?'':filter+' '}orders</div><div class="empty-desc">Use Nova AI to create orders</div></div>`;
+    return;
+  }
+  const rows = orders.map(o => {
+    const sc = 'status-'+(o.status||'pending').toLowerCase().replace(/ /g,'_');
+    return `<tr>
+      <td><span class="order-id">#${o.id}</span></td>
+      <td>${o.part_name||'—'}</td>
+      <td>${o.material||'—'}</td>
+      <td>${o.quantity||'—'}</td>
+      <td><span class="status-chip ${sc}">${(o.status||'pending').toUpperCase()}</span></td>
+      <td><span class="due-date">${o.deadline||'—'}</span></td>
+    </tr>`;
+  }).join('');
+  container.innerHTML = `<table class="orders-table"><thead><tr><th>Order ID</th><th>Part</th><th>Material</th><th>Qty</th><th>Status</th><th>Due Date</th></tr></thead><tbody>${rows}</tbody></table>`;
+}
+
+function updateStats() {
+  const o = state.orders;
+  document.getElementById('stat-total').textContent    = o.length;
+  document.getElementById('stat-accepted').textContent = o.filter(x => /accepted/i.test(x.status)).length;
+  document.getElementById('stat-pending').textContent  = o.filter(x => /pending/i.test(x.status)).length;
+  document.getElementById('stat-completed').textContent= o.filter(x => /completed/i.test(x.status)).length;
+}
+
+function renderTimeline() {
+  const c = document.getElementById('sec-timeline');
+  if (!c) return;
+  const events = [];
+  state.orders.forEach(o => (o.timeline||[]).forEach(t => events.push({orderId:o.id,part:o.part_name,event:t.event,time:t.timestamp})));
+  events.sort((a,b)=>new Date(b.time)-new Date(a.time));
+  if (!events.length) { c.innerHTML=`<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-title">No timeline events yet</div></div>`; return; }
+  c.innerHTML = events.map(e=>`<div class="timeline-item"><div class="timeline-dot ${/quality/i.test(e.event)?'quality':/status/i.test(e.event)?'status':''}"></div><div><div class="timeline-order">#${e.orderId} — ${e.part||'Order'}</div><div class="timeline-event">${e.event}</div><div class="timeline-time">${new Date(e.time).toLocaleString()}</div></div></div>`).join('');
+}
+
+function renderQuality() {
+  const c = document.getElementById('sec-quality');
+  if (!c) return;
+  const reports = [];
+  state.orders.forEach(o => (o.timeline||[]).forEach(t => { if(/quality|inspection/i.test(t.event)) reports.push({orderId:o.id,part:o.part_name,event:t.event,time:t.timestamp,passed:!/fail/i.test(t.event)}); }));
+  reports.sort((a,b)=>new Date(b.time)-new Date(a.time));
+  if (!reports.length) { c.innerHTML=`<div class="empty-state"><div class="empty-icon">🔬</div><div class="empty-title">No quality reports yet</div></div>`; return; }
+  c.innerHTML = reports.map(r=>`<div class="quality-item"><div class="quality-header"><span class="quality-order">#${r.orderId} — ${r.part||'Order'}</span><span class="quality-result ${r.passed?'pass':'fail'}">${r.passed?'✓ PASSED':'✗ FAILED'}</span></div><div class="quality-detail">${r.event}</div><div class="quality-time">${new Date(r.time).toLocaleString()}</div></div>`).join('');
+}
+
+function renderAnalytics() {
+  // Status bar chart
+  const statuses = ['pending','accepted','in_progress','completed','rejected'];
+  const labels = ['Pending','Accepted','In Prog.','Done','Rejected'];
+  const colors = ['var(--amber)','var(--green)','var(--accent)','var(--accent2)','var(--red)'];
+  const counts = statuses.map(s => state.orders.filter(o=>(o.status||'').toLowerCase()===s).length);
+  const max = Math.max(...counts,1);
+  const barHtml = counts.map((c,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;height:100%;">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:${colors[i]};">${c}</div>
+    <div style="width:100%;flex:1;display:flex;align-items:flex-end;">
+      <div style="width:100%;height:${Math.max(8,Math.round(c/max*80))}px;background:${colors[i]};opacity:0.7;border-radius:4px 4px 0 0;transition:height 0.5s;"></div>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:9px;color:var(--muted);text-align:center;">${labels[i]}</div>
+  </div>`).join('');
+  const bc = document.getElementById('analytics-status-bars');
+  if (bc) bc.innerHTML = `<div style="display:flex;gap:8px;width:100%;height:100%;align-items:flex-end;">${barHtml}</div>`;
+
+  // Activity
+  const ac = document.getElementById('analytics-activity');
+  if (ac) {
+    const events = [];
+    state.orders.forEach(o=>(o.timeline||[]).forEach(t=>events.push({event:t.event,time:t.timestamp})));
+    events.sort((a,b)=>new Date(b.time)-new Date(a.time));
+    if (!events.length) { ac.textContent = 'No activity yet.'; return; }
+    ac.innerHTML = events.slice(0,6).map(e=>`<div style="padding:5px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <div style="color:var(--text);">${e.event}</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--muted);">${new Date(e.time).toLocaleString()}</div>
+    </div>`).join('');
+  }
+}
+
+function refreshAll() {
+  updateStats();
+  document.getElementById('nav-badge').textContent = state.orders.length;
+  renderPageContent(state.currentPage);
+}
+
+// ===== CHAT =====
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>'); }
+function fmtTime(d) { return d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'}); }
+
+function addUserMsg(text) {
+  const el = document.createElement('div');
+  el.className = 'msg user';
+  el.innerHTML = `<div class="msg-bubble">${escHtml(text)}</div><div class="msg-time">${fmtTime(new Date())}</div>`;
+  document.getElementById('chat-messages').appendChild(el);
+  scrollChat();
+}
+
+function addAssistantMsg(text, data, hint) {
+  const el = document.createElement('div');
+  el.className = 'msg assistant';
+  let extra = '';
+  if (data && data.id) {
+    extra = `<div class="response-card"><div class="rc-label">ORDER DETAILS</div>
+      ${data.id?`<div class="rc-row"><span class="rc-key">Order ID</span><span class="rc-val">#${data.id}</span></div>`:''}
+      ${data.part_name?`<div class="rc-row"><span class="rc-key">Part</span><span class="rc-val">${data.part_name}</span></div>`:''}
+      ${data.material?`<div class="rc-row"><span class="rc-key">Material</span><span class="rc-val">${data.material}</span></div>`:''}
+      ${data.quantity?`<div class="rc-row"><span class="rc-key">Quantity</span><span class="rc-val">${data.quantity}</span></div>`:''}
+      ${data.deadline?`<div class="rc-row"><span class="rc-key">Deadline</span><span class="rc-val">${data.deadline}</span></div>`:''}
+      ${data.status?`<div class="rc-row"><span class="rc-key">Status</span><span class="rc-val">${data.status.toUpperCase()}</span></div>`:''}
+    </div>`;
+  } else if (data && data.orders && data.orders.length > 0) {
+    const rows = data.orders.slice(0,5).map(o=>`<div class="rc-row"><span class="rc-key">#${o.id} ${o.part_name}</span><span class="rc-val">${(o.status||'pending').toUpperCase()}</span></div>`).join('');
+    extra = `<div class="response-card"><div class="rc-label">ORDERS (${data.count||data.orders.length})</div>${rows}</div>`;
+  }
+  el.innerHTML = `<div class="msg-bubble">${escHtml(text)}${extra}</div><div class="msg-time">${fmtTime(new Date())}</div>`;
+  document.getElementById('chat-messages').appendChild(el);
+  scrollChat();
+
+  // Show badge if not on chat page
+  if (state.currentPage !== 'chat') {
+    const badge = document.getElementById('chat-badge');
+    badge.style.display = 'inline-block';
+  }
+}
+
+function addSystemMsg(text) { addAssistantMsg(text, {}, ''); }
+
+function showThinking() {
+  const el = document.createElement('div');
+  el.id = 'thinking'; el.className = 'thinking-bubble';
+  el.innerHTML = `<div class="thinking-dot"></div><div class="thinking-dot"></div><div class="thinking-dot"></div>`;
+  document.getElementById('chat-messages').appendChild(el);
+  scrollChat();
+}
+function hideThinking() { const el=document.getElementById('thinking'); if(el)el.remove(); }
+function scrollChat() { const c=document.getElementById('chat-messages'); c.scrollTop=c.scrollHeight; }
+
+function fillCmd(text) { document.getElementById('chat-input').value=text; document.getElementById('chat-input').focus(); }
+function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,72)+'px'; }
+function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} }
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg || state.isThinking) return;
+  input.value=''; input.style.height='auto';
+  state.isThinking=true; document.getElementById('send-btn').disabled=true;
+  addUserMsg(msg); showThinking();
+
+  const ordersCtx = state.orders.length>0
+    ? `\n\nCurrent orders:\n${JSON.stringify(state.orders,null,2)}`
+    : '\n\nNo orders yet.';
+
+  state.chatHistory.push({role:'user',content:msg});
+
+  const systemPrompt = `You are Nova, an AI assistant for Nova Nexus Manufacturing OS.
+
+Respond ONLY with valid JSON (no markdown, no backticks):
+{"message":"text","type":"NONE|ORDER_CREATED|STATUS_UPDATED|ORDERS_LIST|QUALITY_LOGGED|ORDER_DETAIL","ui_hint":"fade-in|success-glow","data":{}}
+
+User: ${state.user?.name} (${state.user?.role})${ordersCtx}
+
+RULES:
+- CREATE ORDER: Extract part_name, material, quantity, deadline (YYYY-MM-DD). Assign id=${state.orders.length+1}. status="pending". type="ORDER_CREATED", data=order.
+- VIEW ORDERS: type="ORDERS_LIST", data={orders:[...],count:N}
+- UPDATE STATUS: type="STATUS_UPDATED", data=updated order
+- QUALITY: type="QUALITY_LOGGED", data={order_id,result:"PASSED"|"FAILED",notes}
+- Other: type="NONE"
+Status values: pending,accepted,rejected,in_progress,completed`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:systemPrompt,
+        messages:state.chatHistory.slice(-20)
+      })
+    });
+    hideThinking();
+    if(!res.ok) throw new Error(`${res.status}`);
+    const apiData=await res.json();
+    const rawText=apiData.content?.map(b=>b.text||'').join('')||'{}';
+    state.chatHistory.push({role:'assistant',content:rawText});
+    saveHistory();
+    let parsed={};
+    try { parsed=JSON.parse(rawText.replace(/```json|```/g,'').trim()); } catch(e){ parsed={message:rawText,type:'NONE',data:{}}; }
+    const text=parsed.message||'Done.';
+    const payload=parsed.data||{};
+    addAssistantMsg(text,payload,parsed.ui_hint||'');
+    applyOrderMutation(parsed.type,payload);
+  } catch(err) {
+    hideThinking();
+    state.chatHistory.pop();
+    handleDemoMode(msg);
+  }
+  state.isThinking=false; document.getElementById('send-btn').disabled=false; input.focus();
+}
+
+function applyOrderMutation(type, payload) {
+  if (type==='ORDER_CREATED'&&payload.id) {
+    payload.id = state.orders.length>0 ? Math.max(...state.orders.map(o=>o.id))+1 : 1;
+    payload.timeline = [{timestamp:new Date().toISOString(),event:'Order created via Nova AI'}];
+    state.orders.push(payload); saveOrders(); refreshAll();
+    showToast('✅ Order created','success');
+  } else if (type==='STATUS_UPDATED'&&payload.id) {
+    const idx=state.orders.findIndex(o=>o.id===payload.id);
+    if(idx>=0){ const old=state.orders[idx].status; state.orders[idx]={...state.orders[idx],...payload}; state.orders[idx].timeline=[...(state.orders[idx].timeline||[]),{timestamp:new Date().toISOString(),event:`Status: ${old} → ${payload.status}`}]; saveOrders(); refreshAll(); showToast('🔄 Status updated','success'); }
+  } else if (type==='QUALITY_LOGGED'&&payload.order_id) {
+    const o=state.orders.find(x=>x.id===payload.order_id);
+    if(o){ o.timeline=[...(o.timeline||[]),{timestamp:new Date().toISOString(),event:`Quality: ${payload.result} — ${payload.notes||''}`}]; if(!o.quality_logs)o.quality_logs=[]; o.quality_logs.push({...payload,timestamp:new Date().toISOString()}); saveOrders(); refreshAll(); showToast('🔬 Quality logged','success'); }
+  }
+}
+
+// ===== DEMO MODE =====
+function handleDemoMode(msg) {
+  const lower=msg.toLowerCase();
+  if(lower.includes('show')||lower.includes('list')||lower.includes('all orders')||lower.includes('view orders')) {
+    if(!state.orders.length) { addAssistantMsg('No orders yet. Try: "I need 50 steel brackets by Friday"'); return; }
+    addAssistantMsg(`Found ${state.orders.length} order(s):`,{orders:state.orders,count:state.orders.length}); return;
+  }
+  const qualKw=['quality','inspection','inspect','thermal','tensile','qc','quality check'];
+  if(qualKw.some(k=>lower.includes(k))) {
+    const m=msg.match(/order\s*#?(\d+)|#(\d+)/i);
+    const oid=m?parseInt(m[1]||m[2]):null;
+    const result=/\bfail/i.test(msg)?'FAILED':'PASSED';
+    if(oid){ const o=state.orders.find(x=>x.id===oid); if(o){ o.timeline=[...(o.timeline||[]),{timestamp:new Date().toISOString(),event:`Quality: ${result}`}]; refreshAll(); addAssistantMsg(`Quality ${result} logged for #${oid}`); showToast('🔬 Quality logged','success'); } else addAssistantMsg(`Order #${oid} not found.`); }
+    else addAssistantMsg('Include an order ID. Example: "Quality check passed for order #1"');
+    return;
+  }
+  const updateVerbs=['mark','update status','set status','change status'];
+  const hasVerb=updateVerbs.some(k=>lower.includes(k));
+  const hasOrderRef=/order\s*#?\d+|#\d+/i.test(msg);
+  const hasStatus=/\b(accepted|rejected|in.?progress|completed|pending)\b/i.test(msg);
+  if(hasVerb||(hasStatus&&hasOrderRef)) {
+    const im=msg.match(/order\s*#?(\d+)|#(\d+)/i);
+    const sm=msg.match(/\b(accepted|rejected|pending|completed|in.?progress|done)\b/i);
+    const oid=im?parseInt(im[1]||im[2]):null;
+    const ns=sm?sm[1].toLowerCase().replace(/[\s-]/g,'_').replace('done','completed'):null;
+    if(oid&&ns){ const o=state.orders.find(x=>x.id===oid); if(o){ const old=o.status; o.status=ns; o.timeline=[...(o.timeline||[]),{timestamp:new Date().toISOString(),event:`Status: ${old} → ${ns}`}]; saveOrders(); refreshAll(); addAssistantMsg(`#${oid} updated: ${old} → ${ns}`,o); showToast('🔄 Updated','success'); } else addAssistantMsg(`Order #${oid} not found.`); }
+    else addAssistantMsg('Include order ID and status. Example: "Mark order #2 as accepted"');
+    return;
+  }
+  const cm=lower.match(/(\d+)\s+(\w+)\s*(brackets?|flanges?|shafts?|plates?|parts?|gears?|bolts?|valves?)/i);
+  const dm=msg.match(/by\s+([A-Za-z0-9\s]+?)(?:\.|,|$)/i);
+  const mm=msg.match(/\b(steel|aluminum|copper|iron|titanium|plastic)\b/i);
+  const hasCreate=lower.includes('need')||lower.includes('require')||lower.includes('produce')||lower.includes('want')||cm;
+  if(hasCreate) {
+    const o={id:state.orders.length+1,part_name:cm?(cm[2]+' '+cm[3]).trim():'Manufacturing Part',material:mm?(mm[1].charAt(0).toUpperCase()+mm[1].slice(1)):'Steel',quantity:cm?parseInt(cm[1]):1,deadline:dm?dm[1].trim():'2026-06-30',status:'pending',timeline:[{timestamp:new Date().toISOString(),event:'Order created via AI'}]};
+    state.orders.push(o); saveOrders(); refreshAll();
+    addAssistantMsg(`✅ Order #${o.id} created.`,o,'success-glow');
+    showToast('✅ Order created','success'); return;
+  }
+  addAssistantMsg('Try:\n• "I need 50 steel brackets by Friday"\n• "Mark order #1 as accepted"\n• "Show all orders"\n• "Quality check passed for order #1"');
+}
+
+// ===== TOAST =====
+function showToast(msg,type='success') {
+  const c=document.getElementById('toast-container');
+  const el=document.createElement('div');
+  el.className=`toast ${type}`; el.innerHTML=`<span>${msg}</span>`; c.appendChild(el);
+  setTimeout(()=>{ el.style.transition='opacity 0.3s'; el.style.opacity='0'; setTimeout(()=>el.remove(),300); },3000);
+}
+
+function clearChat() {
+  state.chatHistory=[]; saveHistory();
+  document.getElementById('chat-messages').innerHTML='';
+  addSystemMsg('Chat cleared! Your orders are still safe. How can I help?');
+}
+
+// ===== INIT =====
+updateDashDate();
+// Show empty state on first load
+renderOrdersInto('dash-orders-container','all');
+</script>
+</body>
+</html>
