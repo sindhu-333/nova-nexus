@@ -574,26 +574,11 @@
     <div class="auth-sub">Sign in to access your manufacturing workspace</div>
     <div class="field">
       <label>Email address</label>
-      <input type="email" id="auth-email" placeholder="operator@factory.com" value="operator@factory.com">
+      <input type="email" id="auth-email" placeholder="user@factory.com" value="user@factory.com">
     </div>
     <div class="field">
       <label>Password</label>
       <input type="password" id="auth-password" placeholder="••••••••" value="password">
-    </div>
-    <div style="margin-bottom:20px;">
-      <div style="font-family:'DM Mono',monospace;font-size:11px;letter-spacing:0.08em;color:var(--muted);text-transform:uppercase;margin-bottom:8px;">Role</div>
-      <div class="role-picker" id="role-picker">
-        <div class="role-option active" data-role="operator">
-          <div class="role-icon">⚙️</div>
-          <div class="role-name">Operator</div>
-          <div class="role-desc">Create & manage orders</div>
-        </div>
-        <div class="role-option" data-role="supervisor">
-          <div class="role-icon">👁️</div>
-          <div class="role-name">Supervisor</div>
-          <div class="role-desc">Review & approve</div>
-        </div>
-      </div>
     </div>
     <button class="btn-primary" onclick="doLogin()">Access Workspace →</button>
     <div class="auth-footer">Demo mode — <a onclick="doLogin()">click to enter directly</a></div>
@@ -882,23 +867,17 @@ function saveHistory() { if (state.user) try { localStorage.setItem(hKey(state.u
 function loadHistory(e){ try { const r = localStorage.getItem(hKey(e)); return r ? JSON.parse(r) : []; } catch(e){ return []; } }
 
 // ===== AUTH =====
-document.querySelectorAll('.role-option').forEach(el => {
-  el.addEventListener('click', () => {
-    document.querySelectorAll('.role-option').forEach(r => r.classList.remove('active'));
-    el.classList.add('active');
-  });
-});
 
 function doLogin() {
-  const email = document.getElementById('auth-email').value || 'operator@factory.com';
-  const role  = document.querySelector('#role-picker .role-option.active')?.dataset.role || 'operator';
+  const email = document.getElementById('auth-email').value || 'user@factory.com';
+  const role  = 'user';
   const name  = email.split('@')[0].replace(/\./g,' ').replace(/\b\w/g, l => l.toUpperCase());
   state.user  = { email, role, name };
   state.orders = loadOrders(email);
   state.chatHistory = loadHistory(email);
 
   document.getElementById('topbar-name').textContent = name;
-  document.getElementById('topbar-role').textContent = role.charAt(0).toUpperCase() + role.slice(1);
+  document.getElementById('topbar-role').textContent = 'User';
   document.getElementById('topbar-avatar').textContent = name[0].toUpperCase();
 
   document.getElementById('auth-screen').style.opacity = '0';
