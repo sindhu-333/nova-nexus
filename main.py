@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import Response
 from routes.chat_routes import router
 import uvicorn
 
@@ -36,6 +37,10 @@ def home():
 @app.get("/health")
 def health_check():
     return {"status": "healthy"}
+
+@app.get("/favicon.ico", include_in_schema=False)
+def favicon():
+    return Response(status_code=204)
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
