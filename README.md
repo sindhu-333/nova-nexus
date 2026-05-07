@@ -30,13 +30,13 @@ Run (development)
 
 ```bash
 # Option A - run via uvicorn
-python -m uvicorn main:app --reload --host 0.0.0.0 --port 8000
+python -m uvicorn main:app --reload --host 0.0.0.0 --port 5500
 
 # Option B - run main directly
 python main.py
 ```
 
-Open the API docs at: http://localhost:8000/docs
+Open the API docs at: [http://localhost:8000/docs](http://127.0.0.1:5500/index.html)
 
 Important files
 - `main.py` — application entrypoint and route registration.
