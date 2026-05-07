@@ -1,0 +1,2 @@
+orders = []
+chat_history = []
