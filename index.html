@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
+<<<<<<< HEAD
     --bg: #0a0b0d;
     --surface: #111318;
     --surface2: #181b22;
@@ -20,10 +21,25 @@
     --green: #00e5a0;
     --red: #ff4757;
     --amber: #ffb800;
+=======
+    --bg: linear-gradient(135deg, #0a0a1a 0%, #1a0f2e 30%, #0f1a2e 60%, #1a0a2e 100%);
+    --surface: #0f0f1a;
+    --surface2: #1a1a2e;
+    --border: #2d2d4d;
+    --border2: #3d3d5f;
+    --text: #e0e0ff;
+    --muted: #7d7d9d;
+    --accent: #ff1493;
+    --accent2: #00ffff;
+    --green: #39ff14;
+    --red: #ff0055;
+    --amber: #ffaa00;
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
     --sidebar-w: 220px;
     --topbar-h: 52px;
   }
 
+<<<<<<< HEAD
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
@@ -42,6 +58,37 @@
     pointer-events: none;
     z-index: 9999;
     opacity: 0.4;
+=======
+  * { margin: 0; padding: 0; box-sizing: border-box; position: relative; z-index: 2; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: linear-gradient(135deg, #0a0a1a 0%, #1a0f2e 30%, #0f1a2e 60%, #1a0a2e 100%);
+    background-attachment: fixed;
+    color: var(--text);
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: 
+      url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='grad1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23ff1493;stop-opacity:0.03' /%3E%3Cstop offset='100%25' style='stop-color:%2300ffff;stop-opacity:0.03' /%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23grad1)'/%3E%3Ccircle cx='20' cy='20' r='1.5' fill='%23ff1493' opacity='0.2'/%3E%3Ccircle cx='50' cy='30' r='1.2' fill='%2300ffff' opacity='0.2'/%3E%3Ccircle cx='80' cy='50' r='1.5' fill='%23ff1493' opacity='0.15'/%3E%3Ccircle cx='30' cy='70' r='1.3' fill='%2300ffff' opacity='0.18'/%3E%3Ccircle cx='70' cy='80' r='1.4' fill='%23ff1493' opacity='0.17'/%3E%3Cpath d='M 20 20 L 50 30 L 80 50' stroke='%23ff1493' stroke-width='0.3' fill='none' opacity='0.08'/%3E%3Cpath d='M 50 30 L 30 70 L 70 80' stroke='%2300ffff' stroke-width='0.3' fill='none' opacity='0.08'/%3E%3Cpath d='M 80 50 L 70 80' stroke='%23ff1493' stroke-width='0.3' fill='none' opacity='0.06'/%3E%3C/svg%3E");
+    background-size: 150px 150px;
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.4;
+    animation: drift-bg 30s ease-in-out infinite;
+  }
+  
+  @keyframes drift-bg {
+    0%, 100% { transform: translate(0, 0); }
+    50% { transform: translate(20px, 20px); }
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   }
 
   /* ===== AUTH SCREEN ===== */
@@ -52,14 +99,29 @@
     align-items: center;
     justify-content: center;
     z-index: 100;
+<<<<<<< HEAD
     background: var(--bg);
+=======
+    background: transparent;
+  }
+
+  .auth-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   }
 
   .auth-bg::before {
     content: '';
     position: absolute;
     width: 600px; height: 600px;
+<<<<<<< HEAD
     background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+=======
+    background: radial-gradient(circle, rgba(255,20,147,0.15) 0%, transparent 70%);
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
     top: -100px; left: -100px;
     animation: drift 8s ease-in-out infinite alternate;
   }
@@ -67,27 +129,90 @@
     content: '';
     position: absolute;
     width: 500px; height: 500px;
+<<<<<<< HEAD
     background: radial-gradient(circle, rgba(124,58,237,0.08) 0%, transparent 70%);
     bottom: -100px; right: -100px;
     animation: drift 10s ease-in-out infinite alternate-reverse;
   }
+=======
+    background: radial-gradient(circle, rgba(0,255,255,0.15) 0%, transparent 70%);
+    bottom: -100px; right: -100px;
+    animation: drift 10s ease-in-out infinite alternate-reverse;
+  }
+  
+  /* Animated AI nodes */
+  .auth-bg .node {
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 0 0 10px currentColor;
+    animation: pulse-node 3s ease-in-out infinite;
+  }
+  .auth-bg .node:nth-child(1) { width: 4px; height: 4px; background: rgba(255,20,147,0.6); left: 10%; top: 20%; animation-delay: 0s; }
+  .auth-bg .node:nth-child(2) { width: 3px; height: 3px; background: rgba(0,255,255,0.6); left: 80%; top: 30%; animation-delay: 0.3s; }
+  .auth-bg .node:nth-child(3) { width: 3.5px; height: 3.5px; background: rgba(255,20,147,0.5); left: 20%; top: 70%; animation-delay: 0.6s; }
+  .auth-bg .node:nth-child(4) { width: 4px; height: 4px; background: rgba(0,255,255,0.5); left: 75%; top: 65%; animation-delay: 0.9s; }
+  .auth-bg .node:nth-child(5) { width: 3px; height: 3px; background: rgba(255,20,147,0.4); left: 45%; top: 40%; animation-delay: 1.2s; }
+  
+  @keyframes pulse-node {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.5); opacity: 0.8; }
+  }
+  
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   @keyframes drift {
     from { transform: translate(0,0) scale(1); }
     to   { transform: translate(40px,30px) scale(1.1); }
   }
+<<<<<<< HEAD
   .auth-bg { position:absolute; inset:0; overflow:hidden; }
+=======
+  
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 10px rgba(255,23,68,0.4); }
+    50% { transform: scale(1.1); box-shadow: 0 0 20px rgba(255,23,68,0.8); }
+  }
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
 
   .auth-card {
     position: relative;
     width: 420px;
+<<<<<<< HEAD
     background: var(--surface);
     border: 1px solid var(--border2);
+=======
+    background: rgba(15,15,26,0.85);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--border2);
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
     border-radius: 20px;
     padding: 48px 40px;
     z-index: 1;
     animation: slide-up 0.6s cubic-bezier(0.22,1,0.36,1) forwards;
+<<<<<<< HEAD
     box-shadow: 0 40px 80px rgba(0,0,0,0.5);
   }
+=======
+    box-shadow: 0 40px 80px rgba(0,0,0,0.5), 0 0 40px rgba(255,20,147,0.2), 0 0 20px rgba(0,255,255,0.1);
+    overflow: hidden;
+  }
+  
+  .auth-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    animation: scan-line 3s ease-in-out infinite;
+  }
+  
+  @keyframes scan-line {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+  }
+  
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   @keyframes slide-up {
     from { opacity:0; transform:translateY(30px); }
     to   { opacity:1; transform:translateY(0); }
@@ -117,29 +242,173 @@
     width:100%; background:var(--surface2); border:1px solid var(--border2);
     border-radius:10px; padding:12px 16px; color:var(--text);
     font-family:'DM Sans',sans-serif; font-size:14px; outline:none;
+<<<<<<< HEAD
     transition:border-color 0.2s, box-shadow 0.2s;
   }
   .field input:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(0,212,255,0.1); }
   .field input::placeholder { color:var(--muted); }
+=======
+    transition:border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    position: relative;
+  }
+  .field input:focus { 
+    border-color:var(--accent); 
+    box-shadow:0 0 0 3px rgba(255,20,147,0.2);
+    background: rgba(255,20,147,0.03);
+  }
+  .field input::placeholder { color:var(--muted); }
+  .field input.error {
+    border-color: var(--red);
+    box-shadow: 0 0 0 3px rgba(255,0,85,0.15);
+    background: rgba(255,0,85,0.03);
+  }
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
 
   .role-picker { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:24px; }
   .role-option {
     border:1px solid var(--border2); border-radius:10px; padding:12px;
     cursor:pointer; transition:all 0.2s; text-align:center;
   }
+<<<<<<< HEAD
   .role-option:hover { border-color:var(--accent); }
   .role-option.active { border-color:var(--accent); background:rgba(0,212,255,0.05); }
+=======
+  .role-option:hover { border-color:var(--accent); box-shadow: 0 0 12px rgba(255,20,147,0.3); }
+  .role-option.active { border-color:var(--accent); background:rgba(255,20,147,0.08); box-shadow: 0 0 12px rgba(255,20,147,0.2); }
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   .role-option .role-icon { font-size:20px; margin-bottom:4px; }
   .role-option .role-name { font-size:12px; font-weight:500; color:var(--text); }
   .role-option .role-desc { font-size:11px; color:var(--muted); margin-top:2px; }
 
   .btn-primary {
+<<<<<<< HEAD
     width:100%; background:linear-gradient(135deg,var(--accent),#0090c0);
     color:#000; font-family:'Syne',sans-serif; font-weight:700; font-size:14px;
     letter-spacing:0.02em; border:none; border-radius:10px; padding:14px;
     cursor:pointer; transition:all 0.2s; margin-top:8px;
   }
   .btn-primary:hover { transform:translateY(-1px); box-shadow:0 0 20px rgba(0,212,255,0.3); }
+=======
+    width:100%; background:linear-gradient(135deg,var(--accent),#ff66b2);
+    color:#fff; font-family:'Syne',sans-serif; font-weight:700; font-size:14px;
+    letter-spacing:0.02em; border:none; border-radius:10px; padding:14px;
+    cursor:pointer; transition:all 0.2s; margin-top:8px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: rgba(255,255,255,0.3);
+  }
+  .btn-primary:hover { 
+    transform:translateY(-1px); 
+    box-shadow:0 0 20px rgba(255,20,147,0.6), 0 0 40px rgba(0,255,255,0.3); 
+  }
+  .btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  .error-container {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    background: rgba(255,0,85,0.12);
+    border: 1px solid rgba(255,0,85,0.4);
+    border-radius: 10px;
+    display: none;
+    animation: error-shake 0.3s ease;
+  }
+  .error-container.show {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .error-icon {
+    color: var(--red);
+    font-size: 14px;
+  }
+  .error-title {
+    color: var(--red);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .error-message {
+    color: var(--red);
+    font-size: 12px;
+    opacity: 0.9;
+    font-family: 'DM Mono', monospace;
+  }
+  .error-attempts {
+    color: var(--amber);
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    margin-top: 4px;
+  }
+  @keyframes error-shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+  
+  .loading-spinner {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(0,212,255,0.3);
+    border-top: 2px solid var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .auth-tab-switch {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 12px;
+  }
+  .auth-tab {
+    flex: 1;
+    padding: 8px 0;
+    border: none;
+    background: none;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-bottom: 2px solid transparent;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+  }
+  .auth-tab:hover {
+    color: var(--text);
+  }
+  .auth-tab.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+  }
+  
+  .auth-form-group {
+    display: none;
+  }
+  .auth-form-group.active {
+    display: block;
+    animation: fade-in 0.3s ease;
+  }
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
 
   .auth-footer { text-align:center; margin-top:20px; font-size:12px; color:var(--muted); }
   .auth-footer a { color:var(--accent); cursor:pointer; text-decoration:none; }
@@ -253,11 +522,19 @@
   }
   .nav-item:hover { background:var(--surface2); color:var(--text); }
   .nav-item.active {
+<<<<<<< HEAD
     background:rgba(0,212,255,0.08); color:var(--accent);
+=======
+    background:rgba(255,20,147,0.12); color:var(--accent);
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   }
   .nav-item.active::before {
     content:''; position:absolute; left:0; top:50%; transform:translateY(-50%);
     width:3px; height:60%; background:var(--accent); border-radius:0 2px 2px 0;
+<<<<<<< HEAD
+=======
+    box-shadow: 0 0 8px var(--accent);
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   }
   .nav-icon { font-size:14px; width:18px; text-align:center; flex-shrink:0; }
   .nav-label { flex:1; }
@@ -270,6 +547,7 @@
   /* ── CHAT NAV ITEM special style ── */
   .nav-item.chat-nav {
     margin-top:6px;
+<<<<<<< HEAD
     background:rgba(0,212,255,0.06);
     border:1px solid rgba(0,212,255,0.15);
     color:var(--accent);
@@ -278,6 +556,16 @@
   .nav-item.chat-nav.active {
     background:rgba(0,212,255,0.14);
     border-color:rgba(0,212,255,0.35);
+=======
+    background:rgba(255,20,147,0.08);
+    border:1px solid rgba(255,20,147,0.2);
+    color:var(--accent);
+  }
+  .nav-item.chat-nav:hover { background:rgba(255,20,147,0.14); }
+  .nav-item.chat-nav.active {
+    background:rgba(255,20,147,0.16);
+    border-color:rgba(255,20,147,0.4);
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   }
 
   /* ── CONTENT AREA ── */
@@ -354,7 +642,33 @@
     font-size:11px; font-family:'DM Mono',monospace;
     padding:4px 9px; cursor:pointer; transition:all 0.15s;
   }
+<<<<<<< HEAD
   .filter-btn:hover, .filter-btn.active { border-color:var(--accent); color:var(--accent); }
+=======
+  .filter-btn:hover, .filter-btn.active { 
+    border-color:var(--accent); 
+    color:var(--accent); 
+    box-shadow: 0 0 8px rgba(255,20,147,0.3);
+  }
+
+  .filter-panel {
+    display:flex; flex-wrap:wrap; gap:10px; padding:14px 18px;
+    border-bottom:1px solid var(--border); background:rgba(255,255,255,0.02);
+  }
+  .filter-search {
+    flex:1 1 260px; min-width:180px;
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:10px; color:var(--text); padding:10px 12px;
+    font-family:'DM Sans',sans-serif; font-size:13px;
+  }
+  .filter-select {
+    width:180px; min-width:140px;
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:10px; color:var(--text); padding:10px 12px;
+    font-family:'DM Sans',sans-serif; font-size:13px;
+  }
+  .filter-select option { background:var(--surface2); color:var(--text); }
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
 
   .orders-table { width:100%; border-collapse:collapse; }
   .orders-table th {
@@ -466,7 +780,11 @@
 
   .ai-badge {
     display:flex; align-items:center; gap:5px;
+<<<<<<< HEAD
     background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.2);
+=======
+    background:rgba(255,20,147,0.12); border:1px solid rgba(255,20,147,0.3);
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
     border-radius:20px; padding:4px 10px;
     font-size:11px; font-family:'DM Mono',monospace; color:var(--accent);
   }
@@ -487,8 +805,13 @@
 
   .msg-bubble { padding:10px 13px; border-radius:13px; font-size:13px; line-height:1.5; }
   .msg.user .msg-bubble {
+<<<<<<< HEAD
     background:linear-gradient(135deg,var(--accent),#0090c0);
     color:#000; font-weight:500; border-radius:13px 13px 4px 13px;
+=======
+    background:linear-gradient(135deg,var(--accent),#ff66b2);
+    color:#fff; font-weight:500; border-radius:13px 13px 4px 13px;
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   }
   .msg.assistant .msg-bubble {
     background:var(--surface2); border:1px solid var(--border);
@@ -517,14 +840,30 @@
     font-family:'DM Mono',monospace; padding:4px 9px;
     cursor:pointer; transition:all 0.15s; white-space:nowrap;
   }
+<<<<<<< HEAD
   .qcmd:hover { border-color:var(--accent); color:var(--accent); background:rgba(0,212,255,0.05); }
+=======
+  .qcmd:hover { 
+    border-color:var(--accent); 
+    color:var(--accent); 
+    background:rgba(255,20,147,0.08);
+    box-shadow: 0 0 10px rgba(255,20,147,0.2);
+  }
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
 
   .chat-input-area { padding:10px 14px 14px; flex-shrink:0; background:var(--surface); border-top:1px solid var(--border); }
   .chat-input-wrap {
     display:flex; gap:8px; background:var(--surface2); border:1px solid var(--border2);
     border-radius:11px; padding:9px 11px; transition:border-color 0.2s;
   }
+<<<<<<< HEAD
   .chat-input-wrap:focus-within { border-color:var(--accent); box-shadow:0 0 0 2px rgba(0,212,255,0.08); }
+=======
+  .chat-input-wrap:focus-within { 
+    border-color:var(--accent); 
+    box-shadow:0 0 0 2px rgba(255,20,147,0.15);
+  }
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   .chat-input {
     flex:1; background:none; border:none; outline:none; color:var(--text);
     font-family:'DM Sans',sans-serif; font-size:13px; resize:none; max-height:72px; line-height:1.4;
@@ -532,12 +871,42 @@
   .chat-input::placeholder { color:var(--muted); }
   .send-btn {
     width:30px; height:30px; background:var(--accent); border:none;
+<<<<<<< HEAD
     border-radius:7px; color:#000; cursor:pointer;
     display:grid; place-items:center; flex-shrink:0; align-self:flex-end;
     transition:all 0.2s; font-size:13px;
   }
   .send-btn:hover { background:#00b8d9; }
   .send-btn:disabled { opacity:0.4; cursor:not-allowed; }
+=======
+    border-radius:7px; color:#fff; cursor:pointer;
+    display:grid; place-items:center; flex-shrink:0; align-self:flex-end;
+    transition:all 0.2s; font-size:13px;
+    box-shadow: 0 0 10px rgba(255,20,147,0.4);
+  }
+  .send-btn:hover { 
+    background:#ff4d9f; 
+    box-shadow: 0 0 20px rgba(255,20,147,0.6);
+  }
+  .send-btn:disabled { opacity:0.4; cursor:not-allowed; }
+
+  .mic-btn {
+    width:30px; height:30px; background:var(--surface3); border:none;
+    border-radius:7px; color:var(--text); cursor:pointer;
+    display:grid; place-items:center; flex-shrink:0; align-self:flex-end;
+    transition:all 0.2s; font-size:13px;
+  }
+  .mic-btn:hover { 
+    background:var(--accent);
+    color:#fff;
+    box-shadow: 0 0 10px rgba(255,20,147,0.4);
+  }
+  .mic-btn.recording {
+    background:#ff1744;
+    color:#fff;
+    animation: pulse 1.5s infinite;
+  }
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
 
   .thinking-bubble {
     align-self:flex-start; background:var(--surface2); border:1px solid var(--border);
@@ -556,20 +925,36 @@
     box-shadow:0 8px 32px rgba(0,0,0,0.4); animation:toast-in 0.3s cubic-bezier(0.22,1,0.36,1) forwards; min-width:240px;
   }
   @keyframes toast-in { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+<<<<<<< HEAD
   .toast.success { border-color:rgba(0,229,160,0.3); }
   .toast.error   { border-color:rgba(255,71,87,0.3); }
+=======
+  .toast.success { border-color:rgba(57,255,20,0.4); }
+  .toast.error   { border-color:rgba(255,0,85,0.4); }
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
 </style>
 </head>
 <body>
 
 <!-- AUTH SCREEN -->
 <div id="auth-screen">
+<<<<<<< HEAD
   <div class="auth-bg"></div>
+=======
+  <div class="auth-bg">
+    <div class="node"></div>
+    <div class="node"></div>
+    <div class="node"></div>
+    <div class="node"></div>
+    <div class="node"></div>
+  </div>
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   <div class="auth-card">
     <div class="auth-logo">
       <div class="logo-mark">NN</div>
       <div class="logo-text">Nova<span>Nexus</span></div>
     </div>
+<<<<<<< HEAD
     <div class="auth-title">Welcome back</div>
     <div class="auth-sub">Sign in to access your manufacturing workspace</div>
     <div class="field">
@@ -582,6 +967,71 @@
     </div>
     <button class="btn-primary" onclick="doLogin()">Access Workspace →</button>
     <div class="auth-footer">Demo mode — <a onclick="doLogin()">click to enter directly</a></div>
+=======
+    
+    <!-- Tab Switch -->
+    <div class="auth-tab-switch">
+      <button class="auth-tab active" data-mode="login" onclick="switchAuthMode('login')">Sign In</button>
+      <button class="auth-tab" data-mode="register" onclick="switchAuthMode('register')">Register</button>
+    </div>
+    
+    <!-- ERROR ALERT -->
+    <div id="auth-error-container" class="error-container">
+      <div class="error-icon">⚠️</div>
+      <div class="error-title" id="auth-error-title">Authentication Error</div>
+      <div class="error-message" id="auth-error-message">Invalid credentials</div>
+      <div class="error-attempts" id="auth-error-attempts"></div>
+    </div>
+    
+    <!-- LOGIN FORM -->
+    <div id="login-form" class="auth-form-group active">
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Sign in to access your manufacturing workspace</div>
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" id="auth-email" placeholder="operator@factory.com" value="operator@factory.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="auth-password" placeholder="••••••••" value="password">
+      </div>
+      <button class="btn-primary" id="login-btn" onclick="doLogin()">
+        <span id="login-btn-text">Access Workspace →</span>
+      </button>
+      <div class="auth-footer">First time? <a onclick="switchAuthMode('register')">Create an account</a></div>
+    </div>
+    
+    <!-- REGISTER FORM -->
+    <div id="register-form" class="auth-form-group">
+      <div class="auth-title">Create Account</div>
+      <div class="auth-sub">Join Nova Nexus manufacturing platform</div>
+      <div class="field">
+        <label>Full Name</label>
+        <input type="text" id="reg-username" placeholder="John Doe">
+      </div>
+      <div class="field">
+        <label>Email address</label>
+        <input type="email" id="reg-email" placeholder="your@factory.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="reg-password" placeholder="••••••••">
+      </div>
+      <div class="field">
+        <label>Confirm Password</label>
+        <input type="password" id="reg-confirm" placeholder="••••••••">
+      </div>
+      <button class="btn-primary" id="register-btn" onclick="doRegister()">
+        <span id="register-btn-text">Create Account →</span>
+      </button>
+      <div class="auth-footer">Already have an account? <a onclick="switchAuthMode('login')">Sign in</a></div>
+    </div>
+    
+    <!-- DEMO USERS INFO -->
+    <div class="auth-footer" style="margin-top:24px; padding-top:20px; border-top:1px solid var(--border);">
+      Demo mode — Try: <strong>operator@factory.com</strong> / <strong>password</strong>
+    </div>
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   </div>
 </div>
 
@@ -701,6 +1151,25 @@
               <button class="filter-btn" onclick="filterMain('in_progress',this)">In Progress</button>
             </div>
           </div>
+<<<<<<< HEAD
+=======
+          <div class="filter-panel">
+            <input class="filter-search" type="text" placeholder="Search by part, material, or ID" oninput="updateDashSearch(this.value)">
+            <select class="filter-select" onchange="updateDashMaterial(this.value)">
+              <option value="all">All materials</option>
+              <option value="steel">Steel</option>
+              <option value="aluminum">Aluminum</option>
+              <option value="plastic">Plastic</option>
+              <option value="composite">Composite</option>
+            </select>
+            <select class="filter-select" onchange="updateDashDue(this.value)">
+              <option value="all">All deadlines</option>
+              <option value="today">Due today</option>
+              <option value="week">Next 7 days</option>
+              <option value="month">Next 30 days</option>
+            </select>
+          </div>
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
           <div id="dash-orders-container"></div>
         </div>
       </div>
@@ -722,6 +1191,25 @@
               <button class="filter-btn" onclick="filterSecondary('completed',this,'sec-all')">Completed</button>
             </div>
           </div>
+<<<<<<< HEAD
+=======
+          <div class="filter-panel">
+            <input class="filter-search" type="text" placeholder="Search by part, material, or ID" oninput="updateAllSearch(this.value)">
+            <select class="filter-select" onchange="updateAllMaterial(this.value)">
+              <option value="all">All materials</option>
+              <option value="steel">Steel</option>
+              <option value="aluminum">Aluminum</option>
+              <option value="plastic">Plastic</option>
+              <option value="composite">Composite</option>
+            </select>
+            <select class="filter-select" onchange="updateAllDue(this.value)">
+              <option value="all">All deadlines</option>
+              <option value="today">Due today</option>
+              <option value="week">Next 7 days</option>
+              <option value="month">Next 30 days</option>
+            </select>
+          </div>
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
           <div id="sec-all"></div>
         </div>
       </div>
@@ -835,6 +1323,12 @@
               onkeydown="handleKey(event)"
               oninput="autoResize(this)"
             ></textarea>
+<<<<<<< HEAD
+=======
+            <button class="mic-btn" id="mic-btn" onclick="toggleVoiceInput()" title="Voice Input">
+              🎤
+            </button>
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
             <button class="send-btn" id="send-btn" onclick="sendMessage()">➤</button>
           </div>
         </div>
@@ -854,8 +1348,22 @@ let state = {
   currentPage: 'dashboard',
   previousPage: 'dashboard',
   dashFilter: 'all',
+<<<<<<< HEAD
   isThinking: false,
   chatHistory: []
+=======
+  dashMaterial: 'all',
+  dashSearch: '',
+  dashDue: 'all',
+  allFilter: 'all',
+  allMaterial: 'all',
+  allSearch: '',
+  allDue: 'all',
+  isThinking: false,
+  chatHistory: [],
+  isRecording: false,
+  recognition: null
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
 };
 
 // ===== LOCAL STORAGE =====
@@ -867,6 +1375,7 @@ function saveHistory() { if (state.user) try { localStorage.setItem(hKey(state.u
 function loadHistory(e){ try { const r = localStorage.getItem(hKey(e)); return r ? JSON.parse(r) : []; } catch(e){ return []; } }
 
 // ===== AUTH =====
+<<<<<<< HEAD
 
 function doLogin() {
   const email = document.getElementById('auth-email').value || 'user@factory.com';
@@ -901,6 +1410,230 @@ function doLogout() {
   // Reset chat UI
   document.getElementById('chat-messages').innerHTML = `<div class="msg assistant"><div class="msg-bubble">👋 Hello! I'm Nova, your manufacturing AI. You can:<br><br>• <strong>Create orders</strong> — just describe what you need<br>• <strong>Update status</strong> — "Mark order #1 as accepted"<br>• <strong>Track orders</strong> — "Show all orders"<br>• <strong>Quality reports</strong> — "Quality check passed for order #2"</div><div class="msg-time">Just now</div></div>`;
   // Return to dashboard page
+=======
+const API_BASE = 'http://localhost:8000/api';
+
+// Show/hide error message
+function showAuthError(title, message, attemptsLeft = null) {
+  const container = document.getElementById('auth-error-container');
+  document.getElementById('auth-error-title').textContent = title;
+  document.getElementById('auth-error-message').textContent = message;
+  
+  if (attemptsLeft !== null) {
+    document.getElementById('auth-error-attempts').innerHTML = 
+      `⚠️ ${attemptsLeft} attempt${attemptsLeft !== 1 ? 's' : ''} remaining before lockout`;
+  } else {
+    document.getElementById('auth-error-attempts').innerHTML = '';
+  }
+  
+  container.classList.add('show');
+  document.getElementById('auth-email').classList.add('error');
+  document.getElementById('auth-password').classList.add('error');
+}
+
+function hideAuthError() {
+  const container = document.getElementById('auth-error-container');
+  container.classList.remove('show');
+  document.getElementById('auth-email').classList.remove('error');
+  document.getElementById('auth-password').classList.remove('error');
+}
+
+function switchAuthMode(mode) {
+  // Update tabs
+  document.querySelectorAll('.auth-tab').forEach(tab => tab.classList.remove('active'));
+  document.querySelector(`[data-mode="${mode}"]`).classList.add('active');
+  
+  // Update forms
+  document.querySelectorAll('.auth-form-group').forEach(form => form.classList.remove('active'));
+  document.getElementById(`${mode}-form`).classList.add('active');
+  
+  // Clear error
+  hideAuthError();
+}
+
+async function doLogin() {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const loginBtn = document.getElementById('login-btn');
+  const loginBtnText = document.getElementById('login-btn-text');
+  
+  // Validation
+  if (!email) {
+    showAuthError('Email Required', 'Please enter your email address');
+    return;
+  }
+  
+  if (!password) {
+    showAuthError('Password Required', 'Please enter your password');
+    document.getElementById('auth-password').focus();
+    return;
+  }
+  
+  hideAuthError();
+  
+  // Show loading state
+  loginBtn.disabled = true;
+  loginBtnText.innerHTML = '<span class="loading-spinner"></span> Authenticating...';
+  
+  try {
+    const response = await fetch(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      // Success
+      const user = data.user;
+      state.user = user;
+      state.sessionToken = data.token;
+      state.orders = loadOrders(email);
+      state.chatHistory = loadHistory(email);
+      
+      // Update UI
+      document.getElementById('topbar-name').textContent = user.username;
+      document.getElementById('topbar-role').textContent = user.role;
+      document.getElementById('topbar-avatar').textContent = user.avatar;
+      
+      // Hide auth screen
+      const authScreen = document.getElementById('auth-screen');
+      authScreen.style.opacity = '0';
+      setTimeout(() => {
+        authScreen.style.display = 'none';
+        document.getElementById('app').classList.add('visible');
+        updateDashDate();
+        refreshAll();
+        addSystemMsg(`🎯 Welcome, ${user.username}! Manufacturing OS ready.`);
+      }, 300);
+    } else {
+      // Handle specific error types
+      const error = data.detail || {};
+      const errorCode = error.error || 'UNKNOWN_ERROR';
+      
+      if (errorCode === 'ACCOUNT_LOCKED') {
+        showAuthError('Account Locked', error.message);
+      } else if (errorCode === 'INVALID_CREDENTIALS') {
+        showAuthError(
+          'Invalid Credentials',
+          'Email or password is incorrect',
+          error.attempts_left
+        );
+      } else {
+        showAuthError('Login Failed', error.message || 'Please try again');
+      }
+    }
+  } catch (err) {
+    console.error('Login error:', err);
+    showAuthError('Connection Error', 'Unable to connect to server. Using offline mode.');
+    // Fallback to offline mode
+    const name = email.split('@')[0].replace(/\./g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    state.user = { email, username: name, role: 'Operator', avatar: name[0] };
+    state.orders = loadOrders(email);
+    state.chatHistory = loadHistory(email);
+    
+    setTimeout(() => {
+      document.getElementById('auth-screen').style.display = 'none';
+      document.getElementById('app').classList.add('visible');
+      updateDashDate();
+      refreshAll();
+      addSystemMsg('📡 Offline mode — local data only');
+    }, 2000);
+  } finally {
+    loginBtn.disabled = false;
+    loginBtnText.textContent = 'Access Workspace →';
+  }
+}
+
+async function doRegister() {
+  const username = document.getElementById('reg-username').value.trim();
+  const email = document.getElementById('reg-email').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const confirm = document.getElementById('reg-confirm').value;
+  const registerBtn = document.getElementById('register-btn');
+  const registerBtnText = document.getElementById('register-btn-text');
+  
+  // Validation
+  if (!username || !email || !password) {
+    showAuthError('Missing Fields', 'Please fill in all fields');
+    return;
+  }
+  
+  if (password !== confirm) {
+    showAuthError('Password Mismatch', 'Passwords do not match');
+    return;
+  }
+  
+  if (password.length < 6) {
+    showAuthError('Weak Password', 'Password must be at least 6 characters');
+    return;
+  }
+  
+  hideAuthError();
+  
+  registerBtn.disabled = true;
+  registerBtnText.innerHTML = '<span class="loading-spinner"></span> Creating account...';
+  
+  try {
+    const response = await fetch(`${API_BASE}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, email, password })
+    });
+    
+    const data = await response.json();
+    
+    if (response.ok) {
+      // Success - auto login
+      document.getElementById('auth-email').value = email;
+      document.getElementById('auth-password').value = password;
+      switchAuthMode('login');
+      showToast('✓ Account created successfully!', 'success');
+      setTimeout(() => doLogin(), 500);
+    } else {
+      const error = data.detail || {};
+      showAuthError('Registration Failed', error.message || 'Please try again');
+    }
+  } catch (err) {
+    console.error('Register error:', err);
+    showAuthError('Connection Error', 'Unable to connect to server');
+  } finally {
+    registerBtn.disabled = false;
+    registerBtnText.textContent = 'Create Account →';
+  }
+}
+
+function doLogout() {
+  saveOrders();
+  saveHistory();
+  
+  // Clear state
+  state.user = null;
+  state.orders = [];
+  state.chatHistory = [];
+  state.sessionToken = null;
+  
+  // Show auth screen
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('auth-screen').style.opacity = '1';
+  document.getElementById('app').classList.remove('visible');
+  
+  // Reset forms
+  document.getElementById('auth-email').value = 'operator@factory.com';
+  document.getElementById('auth-password').value = 'password';
+  document.getElementById('auth-email').classList.remove('error');
+  document.getElementById('auth-password').classList.remove('error');
+  hideAuthError();
+  switchAuthMode('login');
+  
+  // Reset chat UI
+  if (document.getElementById('chat-messages')) {
+    document.getElementById('chat-messages').innerHTML = `<div class="msg assistant"><div class="msg-bubble">👋 Hello! I'm Nova, your manufacturing AI...</div><div class="msg-time">Just now</div></div>`;
+  }
+  
+  // Return to dashboard
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   state.currentPage = 'dashboard';
   showPage('dashboard');
   document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -951,10 +1684,17 @@ function showPage(page) {
 }
 
 function renderPageContent(page) {
+<<<<<<< HEAD
   if (page === 'dashboard')   { renderOrdersInto('dash-orders-container', state.dashFilter); updateStats(); }
   if (page === 'all-orders')  renderOrdersInto('sec-all', 'all');
   if (page === 'accepted')    renderOrdersInto('sec-accepted', 'accepted');
   if (page === 'in-progress') renderOrdersInto('sec-progress', 'in_progress');
+=======
+  if (page === 'dashboard')   { renderOrdersInto('dash-orders-container', state.dashFilter, 'dash'); updateStats(); }
+  if (page === 'all-orders')  renderOrdersInto('sec-all', state.allFilter, 'all');
+  if (page === 'accepted')    renderOrdersInto('sec-accepted', 'accepted', 'all');
+  if (page === 'in-progress') renderOrdersInto('sec-progress', 'in_progress', 'all');
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   if (page === 'timeline')    renderTimeline();
   if (page === 'quality')     renderQuality();
   if (page === 'analytics')   renderAnalytics();
@@ -964,6 +1704,7 @@ function filterMain(type, btn) {
   state.dashFilter = type;
   btn.closest('.panel-actions').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
+<<<<<<< HEAD
   renderOrdersInto('dash-orders-container', type);
 }
 
@@ -975,12 +1716,94 @@ function filterSecondary(type, btn, cid) {
 
 // ===== RENDER HELPERS =====
 function renderOrdersInto(cid, filter) {
+=======
+  renderOrdersInto('dash-orders-container', type, 'dash');
+}
+
+function filterSecondary(type, btn, cid) {
+  state.allFilter = type;
+  btn.closest('.panel-actions').querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderOrdersInto(cid, type, 'all');
+}
+
+function updateDashSearch(value) {
+  state.dashSearch = value.toLowerCase();
+  renderOrdersInto('dash-orders-container', state.dashFilter, 'dash');
+}
+
+function updateDashMaterial(value) {
+  state.dashMaterial = value;
+  renderOrdersInto('dash-orders-container', state.dashFilter, 'dash');
+}
+
+function updateDashDue(value) {
+  state.dashDue = value;
+  renderOrdersInto('dash-orders-container', state.dashFilter, 'dash');
+}
+
+function updateAllSearch(value) {
+  state.allSearch = value.toLowerCase();
+  renderOrdersInto('sec-all', state.allFilter, 'all');
+}
+
+function updateAllMaterial(value) {
+  state.allMaterial = value;
+  renderOrdersInto('sec-all', state.allFilter, 'all');
+}
+
+function updateAllDue(value) {
+  state.allDue = value;
+  renderOrdersInto('sec-all', state.allFilter, 'all');
+}
+
+function filterByDeadline(orders, dueFilter) {
+  const now = new Date();
+  if (dueFilter === 'all' || !dueFilter) return orders;
+  return orders.filter(o => {
+    if (!o.deadline) return false;
+    const d = new Date(o.deadline);
+    if (isNaN(d.getTime())) return false;
+    const diffDays = Math.ceil((d - now) / (1000 * 60 * 60 * 24));
+    if (dueFilter === 'today') return d.toDateString() === now.toDateString();
+    if (dueFilter === 'week') return diffDays >= 0 && diffDays <= 7;
+    if (dueFilter === 'month') return diffDays >= 0 && diffDays <= 30;
+    return true;
+  });
+}
+
+// ===== RENDER HELPERS =====
+function renderOrdersInto(cid, filter, scope = 'dash') {
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
   const container = document.getElementById(cid);
   if (!container) return;
   let orders = state.orders;
   if (filter !== 'all') orders = orders.filter(o => (o.status||'').toLowerCase() === filter);
+<<<<<<< HEAD
   if (!orders.length) {
     container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">No ${filter==='all'?'':filter+' '}orders</div><div class="empty-desc">Use Nova AI to create orders</div></div>`;
+=======
+
+  const material = scope === 'dash' ? state.dashMaterial : state.allMaterial;
+  if (material && material !== 'all') {
+    orders = orders.filter(o => (o.material||'').toLowerCase() === material);
+  }
+
+  const searchTerm = scope === 'dash' ? state.dashSearch : state.allSearch;
+  if (searchTerm) {
+    orders = orders.filter(o => {
+      const fields = [o.part_name, o.material, o.status, `${o.id}`];
+      return fields.some(f => f && f.toString().toLowerCase().includes(searchTerm));
+    });
+  }
+
+  const dueFilter = scope === 'dash' ? state.dashDue : state.allDue;
+  orders = filterByDeadline(orders, dueFilter);
+
+  if (!orders.length) {
+    const emptyLabel = searchTerm ? 'No orders match your filters' : `No ${filter==='all'?'':filter+' '}orders`;
+    container.innerHTML = `<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-title">${emptyLabel}</div><div class="empty-desc">Use Nova AI to create orders or adjust filters</div></div>`;
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
     return;
   }
   const rows = orders.map(o => {
@@ -1118,6 +1941,77 @@ function fillCmd(text) { document.getElementById('chat-input').value=text; docum
 function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,72)+'px'; }
 function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();} }
 
+<<<<<<< HEAD
+=======
+// ===== VOICE INPUT =====
+function toggleVoiceInput() {
+  if (state.isRecording) {
+    stopVoiceInput();
+  } else {
+    startVoiceInput();
+  }
+}
+
+function startVoiceInput() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    showToast('Voice input not supported in this browser', 'error');
+    return;
+  }
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  state.recognition = new SpeechRecognition();
+  state.recognition.continuous = false;
+  state.recognition.interimResults = false;
+  state.recognition.lang = 'en-US';
+
+  state.recognition.onstart = function() {
+    state.isRecording = true;
+    const micBtn = document.getElementById('mic-btn');
+    micBtn.classList.add('recording');
+    micBtn.innerHTML = '⏹️';
+    micBtn.title = 'Stop Recording';
+    document.getElementById('chat-input').placeholder = 'Listening...';
+    showToast('Voice input started - speak now', 'info');
+  };
+
+  state.recognition.onresult = function(event) {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById('chat-input').value = transcript;
+    document.getElementById('chat-input').focus();
+    autoResize(document.getElementById('chat-input'));
+  };
+
+  state.recognition.onerror = function(event) {
+    console.error('Speech recognition error:', event.error);
+    showToast('Voice input error: ' + event.error, 'error');
+    stopVoiceInput();
+  };
+
+  state.recognition.onend = function() {
+    stopVoiceInput();
+  };
+
+  try {
+    state.recognition.start();
+  } catch (error) {
+    console.error('Failed to start speech recognition:', error);
+    showToast('Failed to start voice input', 'error');
+  }
+}
+
+function stopVoiceInput() {
+  if (state.recognition) {
+    state.recognition.stop();
+  }
+  state.isRecording = false;
+  const micBtn = document.getElementById('mic-btn');
+  micBtn.classList.remove('recording');
+  micBtn.innerHTML = '🎤';
+  micBtn.title = 'Voice Input';
+  document.getElementById('chat-input').placeholder = 'Message Nova AI...';
+}
+
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
 async function sendMessage() {
   const input = document.getElementById('chat-input');
   const msg = input.value.trim();
@@ -1252,7 +2146,14 @@ function clearChat() {
 // ===== INIT =====
 updateDashDate();
 // Show empty state on first load
+<<<<<<< HEAD
 renderOrdersInto('dash-orders-container','all');
 </script>
 </body>
 </html>
+=======
+renderOrdersInto('dash-orders-container','all', 'dash');
+</script>
+</body>
+</html>
+>>>>>>> bfe028c (feat: complete Nova Nexus manufacturing OS)
