@@ -196,13 +196,14 @@ class ResponseGenerator:
         )
     
     @staticmethod
-    def success_message(message: str) -> Dict[str, Any]:
+    def success_message(message: str, data: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Generic success message.
         """
         return ResponseGenerator._base_response(
             response_type="SUCCESS",
             message=message,
+            data=data or {},
             ui_hint="success-glow"
         )
     

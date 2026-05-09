@@ -8,4 +8,7 @@ class Order(BaseModel):
     quantity: int
     deadline: str
     status: str
+    dimensions: str = None
+    specifications: str = None
+    priority: str = None
     timeline: List = []

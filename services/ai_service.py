@@ -12,8 +12,11 @@ class AIService:
     def __init__(self):
         api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
-            raise ValueError("❌ GROQ_API_KEY not found in .env file")
-        self.client = Groq(api_key=api_key)
+            self.client = None
+            self.available = False
+        else:
+            self.client = Groq(api_key=api_key)
+            self.available = True
         self.model = "llama-3.1-8b-instant"
     
     def extract_order_data(self, message: str) -> Dict[str, Any]:
@@ -23,28 +26,55 @@ class AIService:
         Returns:
         {
             "success": True/False,
-            "part_name": "name or null",
-            "material": "material or null",
-            "quantity": int or null,
-            "deadline": "deadline or null"
+            "orders": [
+                {
+                    "part_name": "name",
+                    "material": "material",
+                    "quantity": int,
+                    "deadline": "deadline",
+                    "dimensions": "optional dimensions",
+                    "specifications": "optional specs",
+                    "priority": "optional priority"
+                }
+            ]
         }
         """
         
-        prompt = f"""Extract manufacturing order data from this message.
-Return ONLY valid JSON, no markdown, no explanation:
+        if not self.available:
+            return {
+                "success": False,
+                "error": "AI service not configured. Please set GROQ_API_KEY in .env file."
+            }
+        
+        prompt = f"""You are an expert manufacturing order assistant. Extract all manufacturing orders from this message.
+
+IMPORTANT RULES:
+- Extract ALL parts/items mentioned, even if multiple
+- For each part, extract: part_name, material, quantity, deadline
+- Optional: dimensions, specifications, priority
+- If no deadline mentioned, use "ASAP" or infer from context
+- If no priority, use "medium"
+- Return valid JSON only
 
 Message: "{message}"
 
 Return exactly this structure:
 {{
-    "part_name": "extracted part name or null",
-    "material": "extracted material or null",
-    "quantity": extracted quantity as integer or null,
-    "deadline": "extracted deadline or null",
+    "orders": [
+        {{
+            "part_name": "specific part name",
+            "material": "material type",
+            "quantity": 100,
+            "deadline": "2024-12-31",
+            "dimensions": "10x20x5 cm",
+            "specifications": "tolerance 0.01mm, surface finish RA 1.6",
+            "priority": "high"
+        }}
+    ],
     "success": true
 }}
 
-If insufficient data for an order, set success to false."""
+If message doesn't contain order info, set success to false."""
         
         try:
             response = self.client.chat.completions.create(

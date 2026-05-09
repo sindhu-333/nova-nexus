@@ -72,31 +72,49 @@ async def _handle_create_order(message: str, user_id: str):
         extracted_data = ai_service.extract_order_data(message)
 
         if not extracted_data.get("success", False):
+            if "error" in extracted_data:
+                return response_generator.error_response(extracted_data["error"])
             return response_generator.insufficient_data_response()
 
-        # Validate required fields
-        required_fields = ["part_name", "material", "quantity", "deadline"]
-        if not all(extracted_data.get(field) for field in required_fields):
-            return response_generator.missing_fields_response(
-                [field for field in required_fields if not extracted_data.get(field)]
-            )
+        orders = extracted_data.get("orders", [])
+        if not orders:
+            return response_generator.insufficient_data_response()
 
-        # Create order using extracted data
-        order_data = {
-            "id": len(OrderService.get_all_orders()) + 1,
-            "part_name": extracted_data["part_name"],
-            "material": extracted_data["material"],
-            "quantity": extracted_data["quantity"],
-            "deadline": extracted_data["deadline"],
-            "status": "pending",
-            "timeline": []
-        }
+        created_orders = []
+        for order_data in orders:
+            # Validate required fields
+            required_fields = ["part_name", "material", "quantity", "deadline"]
+            if not all(order_data.get(field) for field in required_fields):
+                return response_generator.missing_fields_response(
+                    [field for field in required_fields if not order_data.get(field)]
+                )
 
-        order = Order(**order_data)
-        OrderService.create_order(order)
+            # Create order using extracted data
+            order_dict = {
+                "id": len(OrderService.get_all_orders()) + 1,
+                "part_name": order_data["part_name"],
+                "material": order_data["material"],
+                "quantity": order_data["quantity"],
+                "deadline": order_data["deadline"],
+                "status": "pending",
+                "dimensions": order_data.get("dimensions"),
+                "specifications": order_data.get("specifications"),
+                "priority": order_data.get("priority"),
+                "timeline": []
+            }
 
-        # Add to timeline
-        OrderService.add_timeline(order.id, "Order created via AI chat")
+            order = Order(**order_dict)
+            OrderService.create_order(order)
+            created_orders.append(order)
+
+            # Add to timeline
+            OrderService.add_timeline(order.id, "Order created via AI chat")
+
+        # Return success response with all created orders
+        return response_generator.success_message(
+            f"Created {len(created_orders)} order(s) successfully",
+            {"orders": [order.dict() for order in created_orders]}
+        )
 
         # Store AI response in chat history
         chat_history.append({
